@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R&R Florist Operations — Rhinestones & Roses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px; color: #303030; background: #f1f1f1;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: #005bd3; text-decoration: none; cursor: pointer; }
+a:hover { text-decoration: underline; }
+input, select, textarea, button { font-family: inherit; font-size: 13px; }
+button { cursor: pointer; }
+
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN CHROME — TOP BAR
+   ═══════════════════════════════════════════════════════════════ */
+.admin-topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 56px; background: #1a1a1a;
+  display: flex; align-items: center; padding: 0 12px; gap: 12px;
+}
+.topbar-logo { display: flex; align-items: center; gap: 10px; padding: 0 4px; flex-shrink: 0; }
+.topbar-logo svg { width: 28px; height: 28px; }
+.topbar-search {
+  flex: 1; max-width: 580px; margin: 0 auto;
+  background: #303030; border: 1px solid #505050; border-radius: 8px;
+  display: flex; align-items: center; padding: 0 12px; height: 36px;
+  color: #b5b5b5; font-size: 13px; cursor: text; transition: border-color 0.15s;
+}
+.topbar-search:hover { border-color: #666; }
+.topbar-search svg { width: 16px; height: 16px; margin-right: 8px; flex-shrink: 0; opacity: 0.6; }
+.topbar-search span { opacity: 0.7; }
+.topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
+.topbar-icon-btn {
+  width: 36px; height: 36px; border-radius: 8px; border: none;
+  background: transparent; color: #b5b5b5; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.topbar-icon-btn:hover { background: #303030; }
+.topbar-icon-btn svg { width: 20px; height: 20px; }
+.topbar-store-btn {
+  height: 36px; border-radius: 8px; border: none;
+  background: #303030; color: #e3e3e3; padding: 0 10px;
+  display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500;
+  transition: background 0.15s;
+}
+.topbar-store-btn:hover { background: #404040; }
+.store-avatar {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: #b5466a; color: #fff; font-size: 9px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; letter-spacing: 0.3px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN CHROME — SIDEBAR
+   ═══════════════════════════════════════════════════════════════ */
+.admin-sidebar {
+  position: fixed; top: 56px; left: 0; bottom: 0; z-index: 90;
+  width: 240px; background: #f7f7f7; border-right: 1px solid #e3e3e3;
+  overflow-y: auto; padding: 12px 8px;
+}
+.sidebar-nav { list-style: none; }
+.sidebar-nav li { margin-bottom: 1px; }
+.sidebar-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 8px; font-size: 13px;
+  color: #303030; font-weight: 500; cursor: pointer;
+  transition: background 0.12s; text-decoration: none; position: relative;
+}
+.sidebar-nav-item:hover { background: #ebebeb; text-decoration: none; }
+.sidebar-nav-item.active { background: #e3e3e3; font-weight: 600; }
+.sidebar-nav-item.dimmed { color: #919191; font-weight: 400; }
+.sidebar-nav-item svg { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.75; }
+.sidebar-nav-item .nav-badge {
+  background: #e4edff; color: #1f5199; font-size: 11px; font-weight: 600;
+  padding: 1px 7px; border-radius: 10px; margin-left: auto;
+}
+.sidebar-section-label {
+  font-size: 11px; font-weight: 600; color: #919191;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 16px 10px 6px; margin-top: 4px;
+}
+.sidebar-sub-items { list-style: none; padding-left: 0; }
+.sidebar-sub-item {
+  display: block; padding: 6px 10px 6px 40px; border-radius: 8px;
+  font-size: 13px; color: #616161; cursor: pointer;
+  transition: background 0.12s; text-decoration: none;
+}
+.sidebar-sub-item:hover { background: #ebebeb; color: #303030; text-decoration: none; }
+.sidebar-sub-item.active { background: #e3e3e3; color: #303030; font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN CHROME — CONTENT AREA
+   ═══════════════════════════════════════════════════════════════ */
+.admin-main {
+  position: fixed; top: 56px; left: 240px; right: 0; bottom: 0;
+  background: #f1f1f1; overflow-y: auto;
+}
+.admin-content { max-width: 1000px; margin: 0 auto; padding: 0 24px 40px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   APP HEADER
+   ═══════════════════════════════════════════════════════════════ */
+.app-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 0 16px; border-bottom: 1px solid #e3e3e3; margin-bottom: 20px;
+}
+.app-header-title { font-size: 20px; font-weight: 700; color: #1a1a1a; }
+.app-header-right { display: flex; align-items: center; gap: 16px; }
+.store-selector {
+  display: flex; align-items: center; gap: 6px; background: #fff;
+  border: 1px solid #c9cccf; border-radius: 8px; padding: 6px 12px;
+  font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s;
+}
+.store-selector:hover { background: #f7f7f7; }
+.store-selector svg { width: 16px; height: 16px; color: #616161; }
+.app-header-user { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #616161; }
+.app-header-user-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #e3e3e3; display: flex; align-items: center; justify-content: center;
+}
+.app-header-user-icon svg { width: 16px; height: 16px; color: #616161; }
+
+/* ═══════════════════════════════════════════════════════════════
+   CARDS
+   ═══════════════════════════════════════════════════════════════ */
+.card {
+  background: #fff; border: 1px solid #e3e3e3; border-radius: 12px;
+  padding: 20px 24px; margin-bottom: 16px;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.card-title { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+.card-subtitle { font-size: 12px; color: #919191; margin-top: 2px; }
+.card-badge { font-size: 11px; font-weight: 600; background: #e3e3e3; color: #616161; padding: 2px 8px; border-radius: 10px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════════════ */
+.btn-primary {
+  background: #303030; color: #fff; border: none; border-radius: 8px;
+  height: 36px; padding: 0 16px; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: #1a1a1a; }
+.btn-primary:disabled { background: #b5b5b5; cursor: not-allowed; }
+.btn-primary:disabled:hover { background: #b5b5b5; }
+.btn-secondary {
+  background: #fff; color: #303030; border: 1px solid #c9cccf; border-radius: 8px;
+  height: 36px; padding: 0 16px; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { background: #f7f7f7; }
+.btn-sm { height: 30px; padding: 0 12px; font-size: 12px; }
+.btn-full { width: 100%; justify-content: center; }
+.btn-success {
+  background: #1f7a3f; color: #fff; border: none; border-radius: 8px;
+  height: 36px; padding: 0 16px; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  transition: background 0.15s;
+}
+.btn-success:hover { background: #196b35; }
+.btn-success:disabled { background: #a3d9b1; cursor: not-allowed; }
+.btn-danger {
+  background: #fff; color: #d72c0d; border: 1px solid #f5b4b4; border-radius: 8px;
+  height: 36px; padding: 0 16px; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn-danger:hover { background: #fde8e8; }
+
+/* ═══════════════════════════════════════════════════════════════
+   FORMS
+   ═══════════════════════════════════════════════════════════════ */
+.form-input, .form-select, .form-textarea {
+  border: 1px solid #d4d4d4; border-radius: 8px;
+  padding: 7px 10px; font-size: 13px; font-family: inherit;
+  width: 100%; transition: border-color 0.15s, box-shadow 0.15s;
+  background: #fff; color: #303030;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none; border-color: #005bd3; box-shadow: 0 0 0 2px rgba(0,91,211,0.15);
+}
+.form-input.error { border-color: #d72c0d; }
+.form-input.error:focus { box-shadow: 0 0 0 2px rgba(215,44,13,0.15); }
+.form-error { font-size: 12px; color: #d72c0d; margin-top: 4px; }
+.form-success { font-size: 12px; color: #1f7a3f; margin-top: 4px; }
+.form-textarea { resize: vertical; min-height: 60px; }
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: #303030; margin-bottom: 4px; }
+.form-row { display: flex; gap: 12px; }
+.form-row > .form-group { flex: 1; }
+.form-hint { font-size: 12px; color: #919191; margin-top: 4px; }
+.search-input-wrap { position: relative; display: flex; align-items: center; }
+.search-input-wrap svg { position: absolute; left: 10px; width: 16px; height: 16px; color: #919191; pointer-events: none; }
+.search-input-wrap .form-input { padding-left: 34px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   BADGES
+   ═══════════════════════════════════════════════════════════════ */
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.badge-green { background: #e4f5e9; color: #1f7a3f; }
+.badge-red { background: #fde8e8; color: #d72c0d; }
+.badge-blue { background: #e4edff; color: #1f5199; }
+.badge-yellow { background: #fff5e1; color: #9e6c00; }
+.badge-gray { background: #e3e3e3; color: #616161; }
+
+/* ═══════════════════════════════════════════════════════════════
+   BANNERS
+   ═══════════════════════════════════════════════════════════════ */
+.banner-info { background: #eef6ff; border: 1px solid #bbd4f0; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #1f5199; }
+.banner-success { background: #e4f5e9; border: 1px solid #a3d9b1; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #1f7a3f; }
+.banner-error { background: #fde8e8; border: 1px solid #f5b4b4; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #d72c0d; }
+.banner-warning { background: #fff5e1; border: 1px solid #f0d98d; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #9e6c00; }
+
+/* ═══════════════════════════════════════════════════════════════
+   TOAST NOTIFICATIONS
+   ═══════════════════════════════════════════════════════════════ */
+.toast-container {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding-top: 0; pointer-events: none;
+}
+.toast {
+  padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+  animation: slideDown 0.25s ease-out; pointer-events: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.toast-success { background: #e4f5e9; border: 1px solid #a3d9b1; color: #1f7a3f; }
+.toast-error { background: #fde8e8; border: 1px solid #f5b4b4; color: #d72c0d; }
+.toast-info { background: #eef6ff; border: 1px solid #bbd4f0; color: #1f5199; }
+@keyframes slideDown { from { transform: translateY(-6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ═══════════════════════════════════════════════════════════════
+   DATA GRID TABLE
+   ═══════════════════════════════════════════════════════════════ */
+.data-grid { width: 100%; border-collapse: collapse; }
+.data-grid thead th {
+  background: #fafafa; text-align: left; padding: 10px 12px; font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.3px; color: #616161;
+  border-bottom: 1px solid #e3e3e3; white-space: nowrap;
+}
+.data-grid tbody td { padding: 10px 12px; border-bottom: 1px solid #f1f1f1; font-size: 13px; vertical-align: middle; }
+.data-grid tbody tr:hover { background: #fafafa; }
+.data-grid tbody tr.clickable { cursor: pointer; }
+.data-grid .num { font-variant-numeric: tabular-nums; text-align: right; }
+.data-grid .actions { text-align: right; }
+
+/* ═══════════════════════════════════════════════════════════════
+   TAB TOGGLE
+   ═══════════════════════════════════════════════════════════════ */
+.tab-toggle {
+  display: inline-flex; background: #f1f1f1; border-radius: 8px;
+  padding: 3px; gap: 2px; margin-bottom: 16px;
+}
+.tab-toggle-btn {
+  padding: 6px 14px; border-radius: 6px; border: none;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  background: transparent; color: #616161; transition: all 0.15s;
+}
+.tab-toggle-btn.active {
+  background: #fff; color: #303030; font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e3e3e3;
+}
+.tab-toggle-btn .tab-count { font-size: 11px; margin-left: 4px; opacity: 0.7; }
+
+/* ═══════════════════════════════════════════════════════════════
+   SUMMARY CARDS ROW
+   ═══════════════════════════════════════════════════════════════ */
+.summary-row { display: flex; gap: 12px; margin-bottom: 16px; }
+.summary-card {
+  flex: 1; border-radius: 10px; padding: 14px 16px; border: 1px solid #e3e3e3;
+  background: #fff;
+}
+.summary-card-label { font-size: 12px; color: #616161; margin-bottom: 4px; }
+.summary-card-value { font-size: 22px; font-weight: 700; color: #303030; }
+.summary-card.dark { background: #303030; border-color: #303030; }
+.summary-card.dark .summary-card-label { color: #b5b5b5; }
+.summary-card.dark .summary-card-value { color: #fff; }
+.summary-card.green { background: #e4f5e9; border-color: #a3d9b1; }
+.summary-card.green .summary-card-value { color: #1f7a3f; }
+.summary-card.blue { background: #e4edff; border-color: #bbd4f0; }
+.summary-card.blue .summary-card-value { color: #1f5199; }
+.summary-card.yellow { background: #fff5e1; border-color: #f0d98d; }
+.summary-card.yellow .summary-card-value { color: #9e6c00; }
+
+/* ═══════════════════════════════════════════════════════════════
+   DELIVERY CARD
+   ═══════════════════════════════════════════════════════════════ */
+.delivery-card {
+  background: #fff; border: 1px solid #e3e3e3; border-radius: 12px;
+  padding: 16px 20px; margin-bottom: 10px; display: flex; gap: 16px;
+  transition: box-shadow 0.15s;
+}
+.delivery-card:hover { box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.delivery-left { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 90px; }
+.delivery-middle { flex: 1; min-width: 0; }
+.delivery-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-width: 140px; }
+.delivery-recipient { font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 2px; }
+.delivery-address { font-size: 12px; color: #616161; margin-bottom: 6px; }
+.delivery-products { font-size: 12px; color: #303030; margin-bottom: 6px; }
+.delivery-products div { padding: 1px 0; }
+.delivery-card-msg { font-size: 12px; color: #919191; font-style: italic; margin-bottom: 4px; }
+.delivery-date { font-size: 11px; color: #919191; }
+.delivery-notify { font-size: 11px; color: #919191; margin-top: 4px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   FILTER BAR
+   ═══════════════════════════════════════════════════════════════ */
+.filter-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.filter-bar .form-input { max-width: 280px; }
+.filter-bar .form-select { max-width: 180px; height: 36px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE HEADER
+   ═══════════════════════════════════════════════════════════════ */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.page-title { font-size: 17px; font-weight: 700; color: #1a1a1a; }
+.page-subtitle { font-size: 12px; color: #919191; margin-top: 2px; }
+.back-link { font-size: 13px; color: #005bd3; cursor: pointer; margin-bottom: 12px; display: inline-flex; align-items: center; gap: 4px; }
+.back-link:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════════
+   ORDER DETAIL
+   ═══════════════════════════════════════════════════════════════ */
+.detail-grid { display: grid; grid-template-columns: 140px 1fr; gap: 8px 16px; font-size: 13px; }
+.detail-label { color: #919191; font-weight: 500; }
+.detail-value { color: #303030; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   PROPOSAL CATEGORIES
+   ═══════════════════════════════════════════════════════════════ */
+.category-section { border: 1px solid #e3e3e3; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.category-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: #fafafa; cursor: pointer;
+  transition: background 0.12s; user-select: none;
+}
+.category-header:hover { background: #f1f1f1; }
+.category-header-left { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.category-header-left .chevron { transition: transform 0.2s; font-size: 16px; color: #919191; }
+.category-header-left .chevron.open { transform: rotate(90deg); }
+.category-subtotal { font-size: 13px; font-weight: 600; color: #303030; }
+.category-body { padding: 12px 16px; border-top: 1px solid #e3e3e3; }
+.category-body.collapsed { display: none; }
+
+/* ═══════════════════════════════════════════════════════════════
+   CALENDAR
+   ═══════════════════════════════════════════════════════════════ */
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-header { padding: 8px; text-align: center; font-size: 12px; font-weight: 600; color: #616161; text-transform: uppercase; }
+.cal-cell {
+  min-height: 80px; padding: 6px 8px; background: #fff; border: 1px solid #e3e3e3;
+  border-radius: 6px; cursor: pointer; transition: all 0.12s; position: relative;
+}
+.cal-cell:hover { border-color: #005bd3; }
+.cal-cell.today { border-color: #005bd3; border-width: 2px; }
+.cal-cell.blocked { background: #fde8e8; border-color: #f5b4b4; }
+.cal-cell.blocked .cal-day { text-decoration: line-through; color: #d72c0d; }
+.cal-cell.past { background: #f7f7f7; opacity: 0.5; cursor: default; }
+.cal-cell.past:hover { border-color: #e3e3e3; }
+.cal-cell.empty { background: transparent; border-color: transparent; cursor: default; }
+.cal-cell.empty:hover { border-color: transparent; }
+.cal-day { font-size: 13px; font-weight: 600; color: #303030; }
+.cal-info { font-size: 10px; color: #1f5199; margin-top: 4px; }
+.cal-blocked-label { font-size: 10px; color: #d72c0d; font-weight: 600; margin-top: 4px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   CART (New Order)
+   ═══════════════════════════════════════════════════════════════ */
+.cart-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f1f1f1; }
+.cart-item:last-child { border-bottom: none; }
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-title { font-size: 13px; font-weight: 500; color: #303030; }
+.cart-item-price { font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 65px; text-align: right; }
+.cart-qty { display: flex; align-items: center; gap: 4px; }
+.cart-qty button {
+  width: 26px; height: 26px; border: 1px solid #d4d4d4; border-radius: 6px;
+  background: #fff; font-size: 14px; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; color: #303030;
+}
+.cart-qty button:hover { background: #f7f7f7; }
+.cart-qty span { width: 24px; text-align: center; font-size: 13px; font-weight: 600; }
+.cart-remove { background: none; border: none; color: #919191; cursor: pointer; font-size: 16px; padding: 2px 4px; line-height: 1; transition: color 0.15s; }
+.cart-remove:hover { color: #d72c0d; }
+.cart-subtotal { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; margin-top: 4px; border-top: 1px solid #e3e3e3; }
+.cart-subtotal-label { font-size: 14px; font-weight: 600; }
+.cart-subtotal-value { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ═══════════════════════════════════════════════════════════════
+   PRODUCT SEARCH RESULTS
+   ═══════════════════════════════════════════════════════════════ */
+.product-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f1f1f1; }
+.product-row:last-child { border-bottom: none; }
+.product-info { flex: 1; min-width: 0; }
+.product-title { font-size: 13px; font-weight: 600; color: #303030; }
+.product-price { font-size: 13px; font-weight: 600; color: #303030; white-space: nowrap; margin-right: 8px; }
+.btn-add {
+  background: #fff; color: #303030; border: 1px solid #c9cccf; border-radius: 6px;
+  height: 30px; padding: 0 12px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.btn-add:hover { background: #f7f7f7; }
+
+/* ═══════════════════════════════════════════════════════════════
+   NOTIFICATION DOT
+   ═══════════════════════════════════════════════════════════════ */
+.notif-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f0ad4e; margin-right: 4px; vertical-align: middle; }
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITY
+   ═══════════════════════════════════════════════════════════════ */
+.view-hidden { display: none !important; }
+.text-muted { color: #919191; }
+.text-center { text-align: center; }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-0 { margin-bottom: 0; }
+.divider { border: none; border-top: 1px solid #e3e3e3; margin: 16px 0; }
+.empty-state { text-align: center; color: #919191; font-size: 13px; padding: 32px 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════ */
+.admin-main::-webkit-scrollbar { width: 8px; }
+.admin-main::-webkit-scrollbar-track { background: transparent; }
+.admin-main::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+.admin-main::-webkit-scrollbar-thumb:hover { background: #aaa; }
+.admin-sidebar::-webkit-scrollbar { width: 6px; }
+.admin-sidebar::-webkit-scrollbar-track { background: transparent; }
+.admin-sidebar::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+/* Upload placeholder */
+.upload-zone { border: 2px dashed #d4d4d4; border-radius: 10px; padding: 24px; text-align: center; color: #919191; font-size: 13px; cursor: pointer; transition: border-color 0.15s; }
+.upload-zone:hover { border-color: #005bd3; }
+.thumb-grid { display: flex; gap: 8px; margin-top: 12px; }
+.thumb { width: 80px; height: 60px; border-radius: 6px; background: #e3e3e3; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #919191; }
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ADMIN CHROME — TOP BAR
+     ═══════════════════════════════════════════════════════════════ -->
+<header class="admin-topbar">
+  <div class="topbar-logo">
+    <svg viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 0C6.268 0 0 6.268 0 14c0 4.662 2.28 8.793 5.784 11.337L14 32l8.216-6.663C25.72 22.793 28 18.662 28 14 28 6.268 21.732 0 14 0zm0 20a6 6 0 110-12 6 6 0 010 12z" fill="#95BF47"/>
+    </svg>
+  </div>
+  <div class="topbar-search">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>
+    <span>Search</span>
+  </div>
+  <div class="topbar-right">
+    <button class="topbar-icon-btn">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2a6 6 0 016 6c0 2.5-1 4.5-2 6l1 4H5l1-4c-1-1.5-2-3.5-2-6a6 6 0 016-6z"/><path d="M8 18a2 2 0 004 0"/></svg>
+    </button>
+    <button class="topbar-store-btn">
+      <div class="store-avatar">R&R</div>
+      <span>Rhinestones & Roses</span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ADMIN CHROME — SIDEBAR
+     ═══════════════════════════════════════════════════════════════ -->
+<aside class="admin-sidebar">
+  <ul class="sidebar-nav">
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2L2 8v10h6v-6h4v6h6V8L10 2z"/></svg>Home</a></li>
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 3h14a1 1 0 011 1v1H2V4a1 1 0 011-1zm-1 4h16v9a2 2 0 01-2 2H4a2 2 0 01-2-2V7zm4 2v2h2V9H6zm4 0v2h2V9h-2z"/></svg>Orders <span class="nav-badge">8</span></a></li>
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 3a1 1 0 00-1 1v1H3v12h14V5h-3V4a1 1 0 00-1-1H7zm0 2h6v1H7V5zM5 9h10v1H5V9zm0 3h7v1H5v-1z"/></svg>Products</a></li>
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0H3z"/></svg>Customers</a></li>
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor" opacity="0.5"><path d="M3 3h14v14H3V3zm2 2v10h10V5H5z"/></svg>Content</a></li>
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor" opacity="0.5"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 4v4h3l-4 5V9H7l4-5v2z"/></svg>Finance</a></li>
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor" opacity="0.5"><path d="M2 4h16v2H2V4zm0 5h10v2H2V9zm0 5h14v2H2v-2z"/></svg>Analytics</a></li>
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor" opacity="0.5"><path d="M10 2l2.4 4.8L18 8l-4 3.9.9 5.6L10 14.7l-4.9 2.8.9-5.6L2 8l5.6-1.2L10 2z"/></svg>Marketing</a></li>
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor" opacity="0.5"><path d="M4 4h12v2H4V4zm2 4h8v2H6V8zm1 4h6v2H7v-2z"/></svg>Discounts</a></li>
+  </ul>
+  <div class="sidebar-section-label">Sales channels</div>
+  <ul class="sidebar-nav">
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor" opacity="0.5"><path d="M3 2h14a1 1 0 011 1v14a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1zm1 2v12h12V4H4z"/></svg>Online Store</a></li>
+    <li><a class="sidebar-nav-item dimmed" href="#"><svg viewBox="0 0 20 20" fill="currentColor" opacity="0.5"><path d="M3 3h14l1 4H2l1-4zm0 6h14v8H3V9z"/></svg>Point of Sale</a></li>
+  </ul>
+  <div class="sidebar-section-label">Apps</div>
+  <ul class="sidebar-nav">
+    <li><a class="sidebar-nav-item active" href="#" onclick="return false;">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 6h2v2H9V6zm0 4h2v4H9v-4z"/></svg>
+      R&R Florist Operations</a></li>
+  </ul>
+  <ul class="sidebar-sub-items" id="sidebar-subnav">
+    <li><a class="sidebar-sub-item active" id="nav-deliveries" onclick="switchView('deliveries')">Deliveries</a></li>
+    <li><a class="sidebar-sub-item" id="nav-new-order" onclick="switchView('new-order')">New Order</a></li>
+    <li><a class="sidebar-sub-item" id="nav-orders" onclick="switchView('orders')">Orders</a></li>
+    <li><a class="sidebar-sub-item" id="nav-proposals" onclick="switchView('proposals')">Proposals</a></li>
+    <li><a class="sidebar-sub-item" id="nav-house-accounts" onclick="switchView('house-accounts')">House Accounts</a></li>
+    <li><a class="sidebar-sub-item" id="nav-calendar" onclick="switchView('calendar')">Calendar</a></li>
+    <li><a class="sidebar-sub-item" id="nav-subscriptions" onclick="switchView('subscriptions')">Subscriptions</a></li>
+  </ul>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN CONTENT AREA
+     ═══════════════════════════════════════════════════════════════ -->
+<main class="admin-main" id="admin-main">
+  <div class="toast-container" id="toast-container"></div>
+  <div class="admin-content">
+
+    <!-- App Header -->
+    <div class="app-header">
+      <div class="app-header-title">R&R Florist Operations</div>
+      <div class="app-header-right">
+        <div class="store-selector" id="store-selector" onclick="toggleStore()">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 3h14l1 4H2l1-4zm0 6h14v8H3V9z"/></svg>
+          <span id="store-selector-text">North Manchester</span>
+          <svg viewBox="0 0 20 20" fill="currentColor" style="width:14px;height:14px"><path d="M6 8l4 4 4-4"/></svg>
+        </div>
+        <div class="app-header-user">
+          <div class="app-header-user-icon">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0H3z"/></svg>
+          </div>
+          Logged in as: <strong>Jirni C.</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         VIEW: DELIVERIES (B1)
+         ════════════════════════════════════════════════════════════ -->
+    <div data-view="deliveries" id="view-deliveries"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         VIEW: NEW ORDER (B2)
+         ════════════════════════════════════════════════════════════ -->
+    <div data-view="new-order" id="view-new-order" class="view-hidden"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         VIEW: ORDERS (B3)
+         ════════════════════════════════════════════════════════════ -->
+    <div data-view="orders" id="view-orders" class="view-hidden"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         VIEW: ORDER DETAIL (B3A)
+         ════════════════════════════════════════════════════════════ -->
+    <div data-view="order-detail" id="view-order-detail" class="view-hidden"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         VIEW: PROPOSALS (B4A)
+         ════════════════════════════════════════════════════════════ -->
+    <div data-view="proposals" id="view-proposals" class="view-hidden"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         VIEW: PROPOSAL EDITOR (B4B)
+         ════════════════════════════════════════════════════════════ -->
+    <div data-view="proposal-editor" id="view-proposal-editor" class="view-hidden"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         VIEW: HOUSE ACCOUNTS (B5)
+         ════════════════════════════════════════════════════════════ -->
+    <div data-view="house-accounts" id="view-house-accounts" class="view-hidden"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         VIEW: CALENDAR (B6)
+         ════════════════════════════════════════════════════════════ -->
+    <div data-view="calendar" id="view-calendar" class="view-hidden"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         VIEW: SUBSCRIPTIONS (B7)
+         ════════════════════════════════════════════════════════════ -->
+    <div data-view="subscriptions" id="view-subscriptions" class="view-hidden"></div>
+
+  </div>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════════════ */
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const fmt = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+const PRODUCTS = [
+  {name:'Blooming Bliss Bouquet',price:64.99},{name:'Dozen Red Roses with Filler',price:79.99},
+  {name:'Heartwarming Hydrangeas',price:54.99},{name:'Sunshine Delight',price:44.99},
+  {name:'Purple Craze',price:49.99},{name:'Perfectly Plum',price:59.99},
+  {name:'Cotton Candy Love',price:54.99},{name:'Simply Kind',price:39.99},
+  {name:'Genuine & Joyful',price:49.99},{name:'Darling Cupid',price:54.99},
+  {name:'Daily Special Flower Design',price:34.99},{name:'Wrapped Designer\'s Choice Bouquet',price:44.99},
+  {name:'Dearest Sympathy Lantern with Flowers',price:74.99},{name:'Peace Lily Plant',price:44.99},
+  {name:'Sophisticaed Sophia',price:69.99},{name:'Hearts & Petals',price:59.99},
+  {name:"You're So Lovely",price:54.99},{name:'Congenial Color',price:49.99},
+  {name:'Plush Bear',price:12.99},{name:'Capri Blue Candle',price:29.99},
+  {name:'Bryan Anthonys Necklace',price:38.00},{name:'Alex + Ani Bracelet',price:34.00},
+  {name:'Gift Basket — Thinking of You',price:49.99},{name:'Get Well Balloon',price:7.99}
+];
+
+const ZIP_RATES = {'46962':9.99,'46814':12.99,'46992':11.99,'46982':10.99,'46750':13.99};
+
+const STAFF = ['Jirni C.','Josi C.','Jentri C.','Lara M.','Kyra T.'];
+
+const state = {
+  currentView: 'deliveries',
+  activeStore: 'North Manchester',
+  deliveryFilter: 'all',
+  orderCart: [],
+  orderForm: {fulfillment:'delivery',orderType:'phone',zip:''},
+  selectedOrderId: null,
+  selectedProposalIdx: null,
+  expandedAccount: null,
+  calendarBlocked: {5:true,6:true,12:true,19:true,20:true,26:true},
+  calendarStore: 'North Manchester',
+  expandedSub: null,
+  deliveries: [
+    {id:'1047',type:'Online',status:'pending',recipient:'Martha Hendricks',address:'1425 Oak Street, North Manchester, IN 46962',products:['Blooming Bliss Bouquet (1)','Plush Bear (1)'],card:'Happy Birthday Mom! Love, Sarah',date:'April 3, 2026'},
+    {id:'1048',type:'Phone',status:'pending',recipient:'David & Karen Wilson',address:'3200 W Jefferson Blvd, Fort Wayne, IN 46804',products:['Dozen Red Roses (1)'],card:'Happy Anniversary! 25 years strong.',date:'April 3, 2026'},
+    {id:'1049',type:'Online',status:'pending',recipient:'Grace Memorial Church',address:'502 N Market St, North Manchester, IN 46962',products:['Dearest Sympathy Lantern with Flowers (1)','Peace Lily Plant (1)'],card:'With deepest sympathy — The Johnson Family',date:'April 3, 2026'},
+    {id:'1050',type:'Walk-in',status:'pending',recipient:'Emily Torres',address:'78 Sycamore Lane, Wabash, IN 46992',products:['Sunshine Delight Bouquet (1)'],card:'Get well soon! We miss you at work.',date:'April 3, 2026'},
+    {id:'1051',type:'Online',status:'ready',recipient:'North Manchester High School',address:'511 W Main St, North Manchester, IN 46962',products:['Cotton Candy Love Arrangement (3)'],card:'Congratulations to the Class of 2026!',date:'April 3, 2026'},
+    {id:'1052',type:'Phone',status:'ready',recipient:'Linda Patterson',address:'1902 State Road 13, Silver Lake, IN 46982',products:['Perfectly Plum Bouquet (1)','Capri Blue Candle (1)'],card:'Thinking of you — Love, Mom',date:'April 3, 2026'},
+    {id:'1053',type:'Online',status:'ready',recipient:'Rachel & Tom Crawford',address:'4510 Homestead Rd, Fort Wayne, IN 46814',products:['Heartwarming Hydrangeas (1)'],card:'Thank you for everything!',date:'April 3, 2026'},
+    {id:'1054',type:'Walk-in',status:'taken',recipient:'Parkview Hospital, Room 312',address:'2200 Randallia Dr, Fort Wayne, IN 46805',products:['Simply Kind Arrangement (1)','Get Well Balloon (1)'],card:'Wishing you a speedy recovery — The Smiths',date:'April 3, 2026'},
+    {id:'1055',type:'Phone',status:'taken',recipient:'Jennifer Blake',address:'305 E Main St, North Manchester, IN 46962',products:['Genuine & Joyful Bouquet (1)'],card:'Just because you\'re amazing!',date:'April 3, 2026'},
+    {id:'1056',type:'Online',status:'taken',recipient:'Maple Crest Senior Living',address:'750 Maple Crest Dr, Wabash, IN 46992',products:['Wrapped Designer\'s Choice Bouquet (2)'],card:'Happy Spring from Rhinestones & Roses',date:'April 3, 2026'},
+    {id:'1057',type:'Phone',status:'delivered',recipient:'Susan Mitchell',address:'1100 N Wabash Ave, Huntington, IN 46750',products:['Purple Craze Bouquet (1)'],card:'Miss you! — Your College Roommate',date:'April 3, 2026',deliveredAt:'10:42 AM'},
+    {id:'1058',type:'Online',status:'delivered',recipient:'Amy Richards',address:'240 S Main St, North Manchester, IN 46962',products:['The One For Me Arrangement (1)','Bryan Anthonys Necklace (1)'],card:'Forever yours — James',date:'April 3, 2026',deliveredAt:'11:15 AM'}
+  ],
+  orders: [
+    {id:'1058',date:'Apr 3',sender:'James Richards',recipient:'Amy Richards',type:'Online',fulfillment:'Delivery',status:'Delivered',total:82.99,alert:false},
+    {id:'1057',date:'Apr 3',sender:'College Roommate',recipient:'Susan Mitchell',type:'Phone',fulfillment:'Delivery',status:'Delivered',total:49.99,alert:false},
+    {id:'1056',date:'Apr 3',sender:'R&R Spring Promo',recipient:'Maple Crest Senior Living',type:'Online',fulfillment:'Delivery',status:'Taken',total:89.98,alert:false},
+    {id:'1055',date:'Apr 3',sender:'Walk-in Customer',recipient:'Jennifer Blake',type:'Walk-in',fulfillment:'Delivery',status:'Taken',total:49.99,alert:false},
+    {id:'1054',date:'Apr 3',sender:'The Smith Family',recipient:'Parkview Hospital Rm 312',type:'Walk-in',fulfillment:'Delivery',status:'Taken',total:52.98,alert:false},
+    {id:'1053',date:'Apr 3',sender:'R&R Web Order',recipient:'Rachel & Tom Crawford',type:'Online',fulfillment:'Delivery',status:'Ready',total:54.99,alert:false},
+    {id:'1052',date:'Apr 3',sender:'Mrs. Patterson',recipient:'Linda Patterson',type:'Phone',fulfillment:'Delivery',status:'Ready',total:89.98,alert:false},
+    {id:'1051',date:'Apr 3',sender:'School Admin',recipient:'N. Manchester High School',type:'Online',fulfillment:'Delivery',status:'Ready',total:164.97,alert:false},
+    {id:'1050',date:'Apr 3',sender:'Walk-in Customer',recipient:'Emily Torres',type:'Walk-in',fulfillment:'Delivery',status:'Pending',total:44.99,alert:false},
+    {id:'1049',date:'Apr 3',sender:'Johnson Family',recipient:'Grace Memorial Church',type:'Online',fulfillment:'Delivery',status:'Pending',total:119.98,alert:true},
+    {id:'1048',date:'Apr 3',sender:'Mike Wilson',recipient:'David & Karen Wilson',type:'Phone',fulfillment:'Delivery',status:'Pending',total:79.99,alert:false},
+    {id:'1047',date:'Apr 3',sender:'Sarah Hendricks',recipient:'Martha Hendricks',type:'Online',fulfillment:'Delivery',status:'Pending',total:77.98,alert:true}
+  ],
+  proposals: [
+    {client:'Tyler & Jessica Cripe',eventDate:'Apr 26, 2026',eventType:'Wedding',venue:'The Brick at Blue Star, Fort Wayne',status:'Confirmed',total:3450.00,email:'cripe.jessica@gmail.com'},
+    {client:'Amanda & Ryan Foster',eventDate:'Jun 14, 2026',eventType:'Wedding',venue:'Honeywell Center, Wabash',status:'Sent',total:2875.00,email:'amanda.foster@email.com'},
+    {client:'North Manchester Chamber',eventDate:'May 10, 2026',eventType:'Corporate Event',venue:'Manchester University',status:'Draft',total:680.00,email:'events@nmchamber.org'},
+    {client:'Sarah & Daniel Kim',eventDate:'Aug 2, 2026',eventType:'Wedding',venue:'Parkview Field, Fort Wayne',status:'Sent',total:4200.00,email:'sarah.kim@email.com'},
+    {client:'Wabash Co. Historical Society',eventDate:'Jul 4, 2026',eventType:'Event',venue:'Memorial Park, N. Manchester',status:'Confirmed',total:425.00,email:'info@wabashhistory.org'},
+    {client:'Jennifer Blake (2025)',eventDate:'Sep 20, 2025',eventType:'Wedding',venue:'The Loft at Charley Creek Inn',status:'Complete',total:2100.00,email:'jen.blake@email.com'},
+    {client:'Morgan & Tyler Watts (2025)',eventDate:'Jun 7, 2025',eventType:'Wedding',venue:'Salamonie Reservoir',status:'Archived',total:1850.00,email:'morgan.watts@email.com'}
+  ],
+  accounts: [
+    {name:'Wabash County Hospital',contact:'Janet Rawlings',balance:342.00,lastBilled:'Mar 28, 2026',status:'billed'},
+    {name:'Parkview Funeral Home',contact:'Bob Langford',balance:1247.50,lastBilled:'Mar 28, 2026',status:'billed'},
+    {name:'Manchester University',contact:'Events Office',balance:515.00,lastBilled:null,status:'outstanding'},
+    {name:'Fort Wayne Convention Center',contact:'Lisa Granger',balance:0,lastBilled:'Mar 28, 2026',status:'current'},
+    {name:'Roann Community Church',contact:'Pastor Williams',balance:189.00,lastBilled:null,status:'outstanding'}
+  ],
+  subscriptions: [
+    {customer:'Wabash County Hospital',contact:'Janet Rawlings',product:'Weekly Reception Flowers',desc:'Wrapped Designer\'s Choice',freq:'Weekly',next:'Apr 7, 2026',store:'North Manchester',status:'Active',address:'710 N East St, Wabash, IN 46992',started:'January 6, 2025',totalDeliveries:64,schedule:'Every Monday'},
+    {customer:'Dr. Sarah Kim',contact:'',product:'Monthly Office Bouquet',desc:'Seasonal arrangement',freq:'Monthly',next:'Apr 15, 2026',store:'Fort Wayne',status:'Active',address:'4200 Medical Park Dr, Fort Wayne, IN 46804',started:'March 1, 2025',totalDeliveries:13,schedule:'15th of each month'},
+    {customer:'Manchester Coffee Co.',contact:'',product:'Biweekly Counter Arrangement',desc:'Small bud vase arrangement',freq:'Biweekly',next:'Apr 10, 2026',store:'North Manchester',status:'Active',address:'119 E Main St, North Manchester, IN 46962',started:'June 15, 2025',totalDeliveries:20,schedule:'Every other Thursday'},
+    {customer:'First Presbyterian Church',contact:'',product:'Weekly Altar Flowers',desc:'Traditional altar arrangement',freq:'Weekly',next:'Apr 6, 2026',store:'North Manchester',status:'Paused',address:'400 N Market St, North Manchester, IN 46962',started:'August 1, 2024',totalDeliveries:78,schedule:'Every Saturday'}
+  ]
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════════════════════ */
+function showToast(msg, type='success') {
+  const c = $('#toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VIEW SWITCHING
+   ═══════════════════════════════════════════════════════════════ */
+function switchView(name) {
+  $$('[data-view]').forEach(el => el.classList.add('view-hidden'));
+  const target = $(`[data-view="${name}"]`);
+  if (target) target.classList.remove('view-hidden');
+  $$('.sidebar-sub-item').forEach(el => el.classList.remove('active'));
+  // Map sub-views to their parent nav
+  const navMap = {'order-detail':'orders','proposal-editor':'proposals'};
+  const navId = navMap[name] || name;
+  const navEl = $(`#nav-${navId}`);
+  if (navEl) navEl.classList.add('active');
+  state.currentView = name;
+  $('#admin-main').scrollTop = 0;
+  // Render views on switch
+  if (name === 'deliveries') renderDeliveries();
+  else if (name === 'new-order') renderNewOrder();
+  else if (name === 'orders') renderOrders();
+  else if (name === 'proposals') renderProposals();
+  else if (name === 'house-accounts') renderHouseAccounts();
+  else if (name === 'calendar') renderCalendar();
+  else if (name === 'subscriptions') renderSubscriptions();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STORE TOGGLE
+   ═══════════════════════════════════════════════════════════════ */
+function toggleStore() {
+  state.activeStore = state.activeStore === 'North Manchester' ? 'Fort Wayne' : 'North Manchester';
+  $('#store-selector-text').textContent = state.activeStore;
+  showToast('Switched to ' + state.activeStore);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B1: DELIVERIES
+   ═══════════════════════════════════════════════════════════════ */
+function getDeliveryCounts() {
+  const d = state.deliveries;
+  return {
+    all: d.length,
+    pending: d.filter(x=>x.status==='pending').length,
+    ready: d.filter(x=>x.status==='ready').length,
+    taken: d.filter(x=>x.status==='taken').length,
+    delivered: d.filter(x=>x.status==='delivered').length
+  };
+}
+
+function statusBadge(s) {
+  const m = {pending:['Pending','badge-gray'],ready:['Ready for Delivery','badge-blue'],taken:['Out for Delivery','badge-yellow'],delivered:['Delivered','badge-green']};
+  const [label,cls] = m[s] || ['Unknown','badge-gray'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function typeBadge(t) {
+  const cls = t==='Online'?'badge-blue':t==='Phone'?'badge-gray':'badge-yellow';
+  return `<span class="badge ${cls}" style="font-size:10px;text-transform:none">${t}</span>`;
+}
+
+function nextStatusBtn(d) {
+  const prog = ['pending','ready','taken','delivered'];
+  const i = prog.indexOf(d.status);
+  if (i >= prog.length - 1) return `<button class="btn-success btn-sm" disabled>✓ Delivered</button>`;
+  const labels = {0:'Mark Ready',1:'Mark Taken',2:'Mark Delivered'};
+  return `<button class="btn-primary btn-sm" onclick="advanceDelivery('${d.id}')">${labels[i]}</button>`;
+}
+
+function advanceDelivery(id) {
+  const d = state.deliveries.find(x=>x.id===id);
+  if (!d) return;
+  const prog = ['pending','ready','taken','delivered'];
+  const i = prog.indexOf(d.status);
+  if (i < prog.length - 1) {
+    d.status = prog[i+1];
+    const labels = {ready:'Ready for Delivery',taken:'Taken',delivered:'Delivered'};
+    showToast(`Order #${id} marked as ${labels[d.status]}. Sender notification sent.`);
+    renderDeliveries();
+  }
+}
+
+function renderDeliveries() {
+  const c = getDeliveryCounts();
+  const f = state.deliveryFilter;
+  const filtered = f==='all' ? state.deliveries : state.deliveries.filter(x=>x.status===f);
+
+  let html = `
+    <div class="page-header">
+      <div><div class="page-title">Deliveries Dashboard</div><div class="page-subtitle">Showing: ${state.activeStore}</div></div>
+    </div>
+    <div class="card mb-16" style="padding:14px 20px">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <label class="form-label" style="margin:0">Date:</label>
+        <div style="display:flex;align-items:center;gap:4px">
+          <button class="btn-secondary btn-sm" style="padding:0 8px" onclick="showToast('Previous day','info')">←</button>
+          <input type="date" class="form-input" style="width:160px;height:32px" value="2026-04-03">
+          <button class="btn-secondary btn-sm" style="padding:0 8px" onclick="showToast('Next day','info')">→</button>
+        </div>
+        <div style="flex:1"></div>
+        <div class="tab-toggle">
+          <button class="tab-toggle-btn ${f==='all'?'active':''}" onclick="state.deliveryFilter='all';renderDeliveries()">All <span class="tab-count">(${c.all})</span></button>
+          <button class="tab-toggle-btn ${f==='pending'?'active':''}" onclick="state.deliveryFilter='pending';renderDeliveries()">Pending <span class="tab-count">(${c.pending})</span></button>
+          <button class="tab-toggle-btn ${f==='ready'?'active':''}" onclick="state.deliveryFilter='ready';renderDeliveries()">Ready <span class="tab-count">(${c.ready})</span></button>
+          <button class="tab-toggle-btn ${f==='taken'?'active':''}" onclick="state.deliveryFilter='taken';renderDeliveries()">Taken <span class="tab-count">(${c.taken})</span></button>
+          <button class="tab-toggle-btn ${f==='delivered'?'active':''}" onclick="state.deliveryFilter='delivered';renderDeliveries()">Delivered <span class="tab-count">(${c.delivered})</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="summary-row">
+      <div class="summary-card dark"><div class="summary-card-label">Total Deliveries</div><div class="summary-card-value">${c.all}</div></div>
+      <div class="summary-card"><div class="summary-card-label">Pending</div><div class="summary-card-value">${c.pending}</div></div>
+      <div class="summary-card blue"><div class="summary-card-label">Ready for Delivery</div><div class="summary-card-value">${c.ready}</div></div>
+      <div class="summary-card yellow"><div class="summary-card-label">Out for Delivery</div><div class="summary-card-value">${c.taken}</div></div>
+      <div class="summary-card green"><div class="summary-card-label">Delivered</div><div class="summary-card-value">${c.delivered}</div></div>
+    </div>`;
+
+  filtered.forEach(d => {
+    html += `<div class="delivery-card">
+      <div class="delivery-left">
+        ${statusBadge(d.status)}
+        ${typeBadge(d.type)}
+      </div>
+      <div class="delivery-middle">
+        <div class="delivery-recipient">${d.recipient}</div>
+        <div class="delivery-address">${d.address}</div>
+        <div class="delivery-products">${d.products.map(p=>'<div>☐ '+p+'</div>').join('')}</div>
+        <div class="delivery-card-msg">"${d.card}"</div>
+        <div class="delivery-date">${d.date}${d.deliveredAt?' · Delivered '+d.deliveredAt:''}</div>
+      </div>
+      <div class="delivery-right">
+        ${nextStatusBtn(d)}
+        <div class="delivery-notify">Sender will be notified</div>
+      </div>
+    </div>`;
+  });
+
+  if (filtered.length === 0) {
+    html += '<div class="empty-state">No deliveries matching this filter.</div>';
+  }
+
+  $('#view-deliveries').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B2: NEW ORDER
+   ═══════════════════════════════════════════════════════════════ */
+function renderNewOrder() {
+  const f = state.orderForm;
+  const isDelivery = f.fulfillment === 'delivery';
+  let cartHTML = '';
+  let subtotal = 0;
+  state.orderCart.forEach((item, i) => {
+    const lineTotal = item.price * item.qty;
+    subtotal += lineTotal;
+    cartHTML += `<div class="cart-item">
+      <div class="cart-item-info"><div class="cart-item-title">${item.name}</div></div>
+      <div class="cart-qty">
+        <button onclick="changeQty(${i},-1)">−</button>
+        <span>${item.qty}</span>
+        <button onclick="changeQty(${i},1)">+</button>
+      </div>
+      <div class="cart-item-price">${fmt(lineTotal)}</div>
+      <button class="cart-remove" onclick="removeFromCart(${i})">×</button>
+    </div>`;
+  });
+
+  const deliveryFee = isDelivery && ZIP_RATES[f.zip] ? ZIP_RATES[f.zip] : 0;
+  const total = subtotal + deliveryFee;
+
+  $('#view-new-order').innerHTML = `
+    <div class="page-header">
+      <div><div class="page-title">New Order</div><div class="page-subtitle">Take a phone or walk-in order</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Order Information</div></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Staff Member</label>
+          <select class="form-select">${STAFF.map(s=>`<option ${s==='Jirni C.'?'selected':''}>${s}</option>`).join('')}</select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Store</label>
+          <select class="form-select"><option ${state.activeStore==='North Manchester'?'selected':''}>North Manchester</option><option ${state.activeStore==='Fort Wayne'?'selected':''}>Fort Wayne</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Order Type</label>
+          <div class="tab-toggle">
+            <button class="tab-toggle-btn ${f.orderType==='phone'?'active':''}" onclick="state.orderForm.orderType='phone';renderNewOrder()">Phone</button>
+            <button class="tab-toggle-btn ${f.orderType==='walkin'?'active':''}" onclick="state.orderForm.orderType='walkin';renderNewOrder()">Walk-in</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Fulfillment</div></div>
+      <div class="tab-toggle mb-16">
+        <button class="tab-toggle-btn ${isDelivery?'active':''}" onclick="state.orderForm.fulfillment='delivery';renderNewOrder()">Local Delivery</button>
+        <button class="tab-toggle-btn ${!isDelivery?'active':''}" onclick="state.orderForm.fulfillment='pickup';renderNewOrder()">In-Store Pickup</button>
+      </div>
+      ${isDelivery ? `
+        <div class="form-row">
+          <div class="form-group" style="flex:2"><label class="form-label">Recipient Name</label><input class="form-input" placeholder="Full name"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Recipient Address</label><input class="form-input" placeholder="Street address"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">City</label><input class="form-input" placeholder="City"></div>
+          <div class="form-group" style="max-width:80px"><label class="form-label">State</label><input class="form-input" value="IN"></div>
+          <div class="form-group" style="max-width:120px">
+            <label class="form-label">ZIP Code</label>
+            <input class="form-input" id="zip-input" placeholder="ZIP" value="${f.zip}" oninput="handleZipChange(this.value)">
+            <div id="zip-feedback"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Delivery Date</label><input type="date" class="form-input" value="2026-04-04"><div class="form-hint">Same-day delivery available for orders placed before noon.</div></div>
+          <div class="form-group"><label class="form-label">Delivery Instructions</label><textarea class="form-textarea" placeholder="Gate code, preferred time, leave at door, etc."></textarea></div>
+        </div>
+      ` : `
+        <div class="form-group"><label class="form-label">Pickup Location</label>
+          <div style="display:flex;gap:16px;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="pickup" checked> North Manchester</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="pickup"> Fort Wayne</label>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Estimated Pickup Date</label><input type="date" class="form-input" style="max-width:200px" value="2026-04-04"></div>
+      `}
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Products</div></div>
+      <div class="search-input-wrap mb-16">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>
+        <input class="form-input" id="product-search-input" placeholder="Search products by name..." oninput="searchProducts(this.value)">
+      </div>
+      <div id="product-search-results"></div>
+      <hr class="divider">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px">Cart${state.orderCart.length?' ('+state.orderCart.length+')':''}</div>
+      ${cartHTML || '<div class="empty-state" style="padding:16px">No products added yet.</div>'}
+      ${state.orderCart.length ? `<div class="cart-subtotal"><div class="cart-subtotal-label">Subtotal</div><div class="cart-subtotal-value">${fmt(subtotal)}</div></div>` : ''}
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Card Message</div></div>
+      <textarea class="form-textarea" id="card-msg" maxlength="250" placeholder="Enter the card message to accompany this arrangement..." oninput="$('#char-count').textContent=this.value.length+'/250'"></textarea>
+      <div class="form-hint" id="char-count">0/250</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Designer Assignment</div></div>
+      <div class="form-group"><label class="form-label">Assigned Designer</label>
+        <select class="form-select" style="max-width:200px">${STAFF.map(s=>`<option>${s}</option>`).join('')}</select>
+      </div>
+    </div>
+
+    <div class="card" style="background:#fafafa">
+      <div class="card-header mb-0"><div class="card-title">Order Summary</div></div>
+      <div style="margin-top:12px">
+        ${state.orderCart.map(item => `<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>${item.name} × ${item.qty}</span><span>${fmt(item.price*item.qty)}</span></div>`).join('')}
+        ${state.orderCart.length ? `
+          <hr class="divider">
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:2px 0"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:2px 0"><span>Delivery Fee</span><span>${isDelivery && deliveryFee ? fmt(deliveryFee) : '$0.00'}</span></div>
+          <hr class="divider">
+          <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:4px 0"><span>Order Total</span><span>${fmt(total)}</span></div>
+        ` : '<div class="empty-state" style="padding:16px">Add products to see summary.</div>'}
+      </div>
+    </div>
+
+    <button class="btn-primary btn-full" style="height:44px;font-size:14px" onclick="createOrder()" id="create-order-btn">Create Order</button>
+  `;
+
+  // Re-run zip feedback if zip exists
+  if (f.zip) handleZipChange(f.zip);
+}
+
+function handleZipChange(val) {
+  state.orderForm.zip = val;
+  const el = $('#zip-feedback');
+  if (!el) return;
+  if (!val || val.length < 5) { el.innerHTML = ''; return; }
+  if (ZIP_RATES[val]) {
+    el.innerHTML = `<div class="form-success">✓ ${val} — Delivery rate: ${fmt(ZIP_RATES[val])}</div>`;
+  } else {
+    el.innerHTML = `<div class="form-error">✗ ${val} — Outside delivery range. Please choose in-store pickup.</div>`;
+  }
+}
+
+function searchProducts(q) {
+  const el = $('#product-search-results');
+  if (!q || q.length < 2) { el.innerHTML = ''; return; }
+  const results = PRODUCTS.filter(p => p.name.toLowerCase().includes(q.toLowerCase()));
+  if (!results.length) { el.innerHTML = '<div class="text-muted" style="padding:8px">No products found.</div>'; return; }
+  el.innerHTML = results.map(p => `<div class="product-row">
+    <div class="product-info"><div class="product-title">${p.name}</div></div>
+    <div class="product-price">${fmt(p.price)}</div>
+    <button class="btn-add" onclick="addToCart('${p.name.replace(/'/g,"\\'")}',${p.price})">Add</button>
+  </div>`).join('');
+}
+
+function addToCart(name, price) {
+  const existing = state.orderCart.find(x => x.name === name);
+  if (existing) { existing.qty++; } else { state.orderCart.push({name, price, qty: 1}); }
+  renderNewOrder();
+}
+
+function changeQty(i, delta) {
+  state.orderCart[i].qty += delta;
+  if (state.orderCart[i].qty < 1) state.orderCart.splice(i, 1);
+  renderNewOrder();
+}
+
+function removeFromCart(i) {
+  state.orderCart.splice(i, 1);
+  renderNewOrder();
+}
+
+function createOrder() {
+  const btn = $('#create-order-btn');
+  btn.innerHTML = '<span class="spinner"></span> Creating Order...';
+  btn.disabled = true;
+  setTimeout(() => {
+    showToast('Order #1059 created successfully. Payment to be processed via Shopify POS.');
+    state.orderCart = [];
+    state.orderForm = {fulfillment:'delivery',orderType:'phone',zip:''};
+    renderNewOrder();
+  }, 1500);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B3: ORDERS LIST
+   ═══════════════════════════════════════════════════════════════ */
+function renderOrders() {
+  let html = `
+    <div class="page-header">
+      <div><div class="page-title">Orders</div><div class="page-subtitle">All floral orders across both locations</div></div>
+      <button class="btn-primary" onclick="switchView('new-order')">+ New Order</button>
+    </div>
+    <div class="card">
+      <div class="filter-bar mb-16">
+        <div class="search-input-wrap" style="flex:1;max-width:280px">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>
+          <input class="form-input" id="order-search" placeholder="Search by order #, customer, or recipient..." oninput="filterOrders()">
+        </div>
+        <select class="form-select" id="order-store-filter" onchange="filterOrders()"><option value="all">All Stores</option><option>North Manchester</option><option>Fort Wayne</option></select>
+        <select class="form-select" id="order-status-filter" onchange="filterOrders()"><option value="all">All Statuses</option><option>Pending</option><option>Ready</option><option>Taken</option><option>Delivered</option></select>
+        <select class="form-select" id="order-type-filter" onchange="filterOrders()"><option value="all">All Types</option><option>Online</option><option>Phone</option><option>Walk-in</option></select>
+      </div>
+      <table class="data-grid">
+        <thead><tr><th>Order #</th><th>Date</th><th>Customer</th><th>Recipient</th><th>Type</th><th>Fulfillment</th><th>Status</th><th class="num">Total</th></tr></thead>
+        <tbody id="orders-tbody"></tbody>
+      </table>
+    </div>`;
+  $('#view-orders').innerHTML = html;
+  filterOrders();
+}
+
+function filterOrders() {
+  const q = ($('#order-search')?.value || '').toLowerCase();
+  const statusF = $('#order-status-filter')?.value || 'all';
+  const typeF = $('#order-type-filter')?.value || 'all';
+  let data = state.orders.filter(o => {
+    if (q && !o.id.includes(q) && !o.sender.toLowerCase().includes(q) && !o.recipient.toLowerCase().includes(q)) return false;
+    if (statusF !== 'all' && o.status !== statusF) return false;
+    if (typeF !== 'all' && o.type !== typeF) return false;
+    return true;
+  });
+
+  const statusMap = {Pending:'badge-gray',Ready:'badge-blue',Taken:'badge-yellow',Delivered:'badge-green'};
+  let rows = '';
+  data.forEach(o => {
+    rows += `<tr class="clickable" onclick="viewOrder('${o.id}')">
+      <td style="font-weight:600">#${o.id}</td>
+      <td>${o.date}</td>
+      <td>${o.sender}</td>
+      <td>${o.recipient}</td>
+      <td>${o.alert?'<span class="notif-dot"></span>':''}${o.type}</td>
+      <td>${o.fulfillment}</td>
+      <td><span class="badge ${statusMap[o.status]}">${o.status}</span></td>
+      <td class="num">${fmt(o.total)}</td>
+    </tr>`;
+  });
+  if (!data.length) rows = '<tr><td colspan="8" class="empty-state">No orders found.</td></tr>';
+  const tbody = $('#orders-tbody');
+  if (tbody) tbody.innerHTML = rows;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B3A: ORDER DETAIL
+   ═══════════════════════════════════════════════════════════════ */
+function viewOrder(id) {
+  state.selectedOrderId = id;
+  renderOrderDetail();
+  switchView('order-detail');
+}
+
+function renderOrderDetail() {
+  const id = state.selectedOrderId || '1047';
+  // Use order 1047 as default rich example
+  const isEditing = state.orderDetailEditing || false;
+  const statusMap = {Pending:'badge-gray',Ready:'badge-blue',Taken:'badge-yellow',Delivered:'badge-green'};
+  const o = state.orders.find(x=>x.id===id) || state.orders[state.orders.length-1];
+
+  const html = `
+    <a class="back-link" onclick="switchView('orders')">← Back to Orders</a>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:20px;font-weight:700">#${o.id}</span>
+          <span class="badge ${statusMap[o.status]}">${o.status}</span>
+          <span class="badge badge-gray" style="text-transform:none">${o.type}</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-secondary btn-sm" onclick="showToast('Print dialog would open','info')">🖨 Print Order</button>
+        </div>
+      </div>
+      <div class="text-muted mt-8">${o.date}, 2026</div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header mb-0"><div class="card-title">Sender Information</div></div>
+        <div class="detail-grid mt-12">
+          <div class="detail-label">Name</div><div class="detail-value">${o.sender}</div>
+          <div class="detail-label">Email</div><div class="detail-value">${o.sender.toLowerCase().replace(/ /g,'.')}@gmail.com</div>
+          <div class="detail-label">Phone</div><div class="detail-value">(260) 555-0147</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header mb-0"><div class="card-title">Recipient Information</div></div>
+        <div class="detail-grid mt-12">
+          <div class="detail-label">Name</div><div class="detail-value">${o.recipient}</div>
+          <div class="detail-label">Address</div><div class="detail-value">1425 Oak Street, North Manchester, IN 46962</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Fulfillment Details</div>
+        <button class="btn-secondary btn-sm" onclick="showToast('Edit mode toggled','info')">Edit</button>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-label">Type</div><div class="detail-value">Local Delivery</div>
+        <div class="detail-label">Delivery Date</div><div class="detail-value">April 3, 2026</div>
+        <div class="detail-label">Delivery Fee</div><div class="detail-value">$12.99</div>
+        <div class="detail-label">Instructions</div><div class="detail-value">Please leave at the front door if no one answers</div>
+        <div class="detail-label">Designer</div><div class="detail-value">Josi C.</div>
+        <div class="detail-label">Card Message</div><div class="detail-value" style="font-style:italic">"Happy Birthday Mom! Love, Sarah"</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Products</div>
+        <button class="btn-secondary btn-sm" onclick="showToast('Product search would open','info')">+ Add Product</button>
+      </div>
+      <table class="data-grid">
+        <thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Line Total</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Blooming Bliss Bouquet</td><td class="num">1</td><td class="num">$64.99</td><td class="num">$64.99</td><td class="actions"><button class="cart-remove" onclick="showToast('Product removed','info')">×</button></td></tr>
+          <tr><td>Plush Bear</td><td class="num">1</td><td class="num">$12.99</td><td class="num">$12.99</td><td class="actions"><button class="cart-remove" onclick="showToast('Product removed','info')">×</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header mb-0"><div class="card-title">Payment</div></div>
+      <div class="detail-grid mt-12">
+        <div class="detail-label">Method</div><div class="detail-value">${o.type==='Online'?'Paid via Stripe — Visa ending 4242':'Paid via Shopify POS — Conf #SPO-48291'}</div>
+        <div class="detail-label">Status</div><div class="detail-value"><span class="badge badge-green">Paid</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header mb-0"><div class="card-title">Status Controls</div></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn-primary btn-sm" ${o.status!=='Pending'?'disabled':''} onclick="updateOrderStatus('${o.id}','Ready')">Mark as Ready for Delivery</button>
+        <button class="btn-primary btn-sm" ${o.status!=='Ready'?'disabled':''} onclick="updateOrderStatus('${o.id}','Taken')">Mark as Taken</button>
+        <button class="btn-success btn-sm" ${o.status!=='Taken'?'disabled':''} onclick="updateOrderStatus('${o.id}','Delivered')">Mark as Delivered</button>
+      </div>
+      <div class="form-hint mt-8">Sender will be notified when status changes.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header mb-0"><div class="card-title">Order Notes</div></div>
+      <textarea class="form-textarea mt-8" placeholder="Add internal notes about this order..."></textarea>
+      <button class="btn-secondary btn-sm mt-8" onclick="showToast('Notes saved')">Save Notes</button>
+    </div>
+
+    <div class="card" style="background:#fafafa">
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>Subtotal</span><span>${fmt(o.total - 12.99)}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>Delivery Fee</span><span>$12.99</span></div>
+      <hr class="divider">
+      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:4px 0"><span>Total</span><span>${fmt(o.total)}</span></div>
+    </div>
+  `;
+  $('#view-order-detail').innerHTML = html;
+}
+
+function updateOrderStatus(id, newStatus) {
+  const o = state.orders.find(x=>x.id===id);
+  if (o) { o.status = newStatus; showToast(`Order #${id} marked as ${newStatus}. Sender notification sent.`); renderOrderDetail(); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B4A: PROPOSALS LIST
+   ═══════════════════════════════════════════════════════════════ */
+function renderProposals() {
+  const statusMap = {Confirmed:'badge-green',Sent:'badge-blue',Draft:'badge-gray',Complete:'badge-green',Archived:'badge-gray'};
+  const counts = {};
+  ['All','Draft','Sent','Confirmed','Complete','Archived'].forEach(s => {
+    counts[s] = s==='All' ? state.proposals.length : state.proposals.filter(p=>p.status===s).length;
+  });
+  const f = state.proposalFilter || 'All';
+  const filtered = f==='All' ? state.proposals : state.proposals.filter(p=>p.status===f);
+
+  let html = `
+    <div class="page-header">
+      <div><div class="page-title">Wedding & Event Proposals</div><div class="page-subtitle">Custom quotes for weddings, events, and special occasions</div></div>
+      <button class="btn-primary" onclick="state.selectedProposalIdx=null;renderProposalEditor();switchView('proposal-editor')">+ Create New Proposal</button>
+    </div>
+    <div class="tab-toggle mb-16">
+      ${['All','Draft','Sent','Confirmed','Complete','Archived'].map(s => `<button class="tab-toggle-btn ${f===s?'active':''}" onclick="state.proposalFilter='${s}';renderProposals()">${s} <span class="tab-count">(${counts[s]})</span></button>`).join('')}
+    </div>
+    <div class="card">
+      <table class="data-grid">
+        <thead><tr><th>Client</th><th>Event Date</th><th>Type</th><th>Venue</th><th>Status</th><th class="num">Total</th><th class="actions">Actions</th></tr></thead>
+        <tbody>
+          ${filtered.map((p, i) => {
+            const realIdx = state.proposals.indexOf(p);
+            return `<tr>
+              <td style="font-weight:600">${p.client}</td>
+              <td>${p.eventDate}</td>
+              <td>${p.eventType}</td>
+              <td>${p.venue}</td>
+              <td><span class="badge ${statusMap[p.status]}">${p.status}</span></td>
+              <td class="num">${fmt(p.total)}</td>
+              <td class="actions"><a onclick="state.selectedProposalIdx=${realIdx};renderProposalEditor();switchView('proposal-editor')">View</a></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  $('#view-proposals').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B4B: PROPOSAL EDITOR
+   ═══════════════════════════════════════════════════════════════ */
+function renderProposalEditor() {
+  const isNew = state.selectedProposalIdx === null;
+  const p = isNew ? {client:'',eventDate:'',eventType:'Wedding',venue:'',status:'Draft',total:0,email:''} : state.proposals[state.selectedProposalIdx];
+  const isConfirmed = p.status === 'Confirmed';
+  const isCripe = p.client.includes('Cripe');
+
+  // Categories with items
+  const categories = [
+    {name:'Bridal Flowers',expanded:true,items:[
+      {item:'Bridal Bouquet',desc:'Garden-style with white roses, eucalyptus, and peonies',price:285},
+      {item:'Headpiece',desc:'Floral crown with baby\'s breath and greenery',price:65},
+      {item:'Toss Bouquet',desc:'Miniature version of bridal bouquet',price:45}
+    ],subtotal:395},
+    {name:'Bridal Party',expanded:false,items:[
+      {item:'Maid of Honor Bouquet',desc:'Complementary to bridal, blush tones',price:75},
+      {item:'Bridesmaid Bouquet (×4)',desc:'Matching blush and ivory',price:240}
+    ],subtotal:315},
+    {name:'Boutonnieres',expanded:false,items:[
+      {item:'Groom',desc:'White rose with eucalyptus sprig',price:15,forWhom:'Tyler'},
+      {item:'Best Man',desc:'Matching, with navy ribbon',price:15,forWhom:'Jake'},
+      {item:'Groomsmen (×4)',desc:'Simple white rose',price:48,forWhom:'Groomsmen'}
+    ],subtotal:78},
+    {name:'Corsages',expanded:false,items:[
+      {item:'Mother of the Bride',desc:'Wrist corsage, blush spray roses',price:35},
+      {item:'Mother of the Groom',desc:'Wrist corsage, ivory spray roses',price:35},
+      {item:'Grandmother (×2)',desc:'Pin-on corsage, simple rose',price:50}
+    ],subtotal:120},
+    {name:'Ceremony',expanded:false,items:[
+      {item:'Altar Arrangements (×2)',desc:'Large urn arrangements, garden style',price:350},
+      {item:'Pew Markers (×8)',desc:'Simple greenery and ribbon',price:120},
+      {item:'Arch/Backdrop Florals',desc:'Full arch with roses, hydrangea, greenery',price:450}
+    ],subtotal:920},
+    {name:'Reception',expanded:false,items:[
+      {item:'Centerpieces (×12)',desc:'Mixed height, garden style',price:720},
+      {item:'Head Table Garland',desc:'Full greenery garland with floral accents, 8ft',price:285},
+      {item:'Cake Flowers',desc:'Fresh flowers for 3-tier cake',price:65},
+      {item:'Cocktail Hour Arrangements (×3)',desc:'Bud vases, varied heights',price:72}
+    ],subtotal:1142}
+  ];
+
+  const floralSubtotal = categories.reduce((s,c)=>s+c.subtotal,0);
+
+  let html = `
+    <a class="back-link" onclick="switchView('proposals')">← Back to Proposals</a>
+    ${!isNew ? `<div class="card" style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="badge ${p.status==='Confirmed'?'badge-green':p.status==='Sent'?'badge-blue':'badge-gray'}">${p.status}</span>
+        <span class="text-muted">${p.status==='Confirmed'?'Confirmed — March 15, 2026':p.status==='Sent'?'Sent — March 10, 2026':'Draft'}</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        ${p.status==='Draft'?'<button class="btn-primary btn-sm" onclick="showToast(\'Estimate sent to '+p.email+'\')">Send Estimate</button>':''}
+        ${p.status==='Sent'?'<button class="btn-success btn-sm" onclick="state.proposals[state.selectedProposalIdx].status=\'Confirmed\';showToast(\'Proposal marked as Confirmed. Deposit received.\');renderProposalEditor()">Mark Confirmed</button>':''}
+        ${p.status==='Confirmed'?'<button class="btn-primary btn-sm" onclick="state.proposals[state.selectedProposalIdx].status=\'Complete\';showToast(\'Proposal marked as Complete\');renderProposalEditor()">Mark Complete</button>':''}
+        ${p.status==='Complete'?'<button class="btn-secondary btn-sm" onclick="state.proposals[state.selectedProposalIdx].status=\'Archived\';showToast(\'Proposal archived\');renderProposalEditor()">Archive</button>':''}
+      </div>
+    </div>` : ''}
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Client Information</div></div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2"><label class="form-label">Client Name</label><input class="form-input" value="${p.client}"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="${p.email}"><div class="form-hint">Estimate will be sent to this email</div></div>
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" value="(260) 555-0199"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Event Details</div></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Event Type</label>
+          <select class="form-select"><option ${p.eventType==='Wedding'?'selected':''}>Wedding</option><option>Corporate Event</option><option>Celebration</option><option>Memorial</option><option>Other</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Event Date</label><input type="date" class="form-input" value="${p.eventDate?'2026-04-26':''}"></div>
+        <div class="form-group"><label class="form-label">Event Time</label><input type="time" class="form-input" value="15:00"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Venue / Location</label><input class="form-input" value="${p.venue}"></div>
+      <div class="form-group"><label class="form-label">Special Instructions</label><textarea class="form-textarea" placeholder="Setup access details, timing notes, teardown requirements..."></textarea></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Floral Categories</div></div>
+      ${categories.map((cat, ci) => `
+        <div class="category-section">
+          <div class="category-header" onclick="toggleCategory(${ci})">
+            <div class="category-header-left">
+              <span class="chevron ${cat.expanded?'open':''}">▶</span>
+              ${cat.name}
+            </div>
+            <div class="category-subtotal">${fmt(cat.subtotal)}</div>
+          </div>
+          <div class="category-body ${cat.expanded?'':'collapsed'}" id="cat-body-${ci}">
+            <table class="data-grid" style="margin-bottom:8px">
+              <thead><tr><th>Item</th><th>Description</th>${cat.name==='Boutonnieres'?'<th>For</th>':''}<th class="num">Price</th></tr></thead>
+              <tbody>
+                ${cat.items.map(item => `<tr>
+                  <td style="font-weight:500">${item.item}</td>
+                  <td class="text-muted">${item.desc}</td>
+                  ${cat.name==='Boutonnieres'?`<td>${item.forWhom||''}</td>`:''}
+                  <td class="num">${fmt(item.price)}</td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+            <a style="font-size:12px" onclick="showToast('Add item form would open','info')">+ Add Item</a>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Additional Charges</div></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Labor</label><input class="form-input" value="250.00" style="text-align:right"></div>
+        <div class="form-group"><label class="form-label">Delivery</label><input class="form-input" value="125.00" style="text-align:right"></div>
+        <div class="form-group"><label class="form-label">Setup & Breakdown</label><input class="form-input" value="105.00" style="text-align:right"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Inspiration Photos</div></div>
+      <div class="upload-zone">📷 Drag and drop photos here, or click to browse</div>
+      <div class="thumb-grid">
+        <div class="thumb">ceremony-inspo.jpg</div>
+        <div class="thumb">bouquet-ref.jpg</div>
+        <div class="thumb">centerpiece-mood.jpg</div>
+      </div>
+    </div>
+
+    <div class="card" style="background:#fafafa">
+      <div class="card-header mb-0"><div class="card-title">Proposal Summary</div></div>
+      <div style="margin-top:12px">
+        ${categories.map(c => `<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>${c.name}</span><span>${fmt(c.subtotal)}</span></div>`).join('')}
+        <hr class="divider">
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Floral Subtotal</span><span>${fmt(floralSubtotal)}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Labor</span><span>$250.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Delivery</span><span>$125.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Setup & Breakdown</span><span>$105.00</span></div>
+        <hr class="divider">
+        <div style="display:flex;justify-content:space-between;font-size:18px;font-weight:700;padding:6px 0"><span>PROPOSAL TOTAL</span><span>${fmt(floralSubtotal + 480)}</span></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+      <button class="btn-secondary" onclick="showToast('Draft saved')">Save Draft</button>
+      <button class="btn-primary" onclick="showToast('Estimate sent to ${p.email||'client@email.com'}')">Send Estimate</button>
+      <button class="btn-success" onclick="showToast('Proposal marked as Confirmed. Deposit received.')">Mark Confirmed</button>
+    </div>
+  `;
+  $('#view-proposal-editor').innerHTML = html;
+}
+
+// Track which categories are expanded
+const categoryExpanded = [true, false, false, false, false, false];
+function toggleCategory(i) {
+  categoryExpanded[i] = !categoryExpanded[i];
+  const body = $(`#cat-body-${i}`);
+  const header = body?.previousElementSibling;
+  if (body) body.classList.toggle('collapsed');
+  if (header) {
+    const chevron = header.querySelector('.chevron');
+    if (chevron) chevron.classList.toggle('open');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B5: HOUSE ACCOUNTS
+   ═══════════════════════════════════════════════════════════════ */
+function renderHouseAccounts() {
+  const statusMap = {billed:{label:'✓ Billed',cls:'badge-green'},outstanding:{label:'⚠ Outstanding',cls:'badge-yellow'},current:{label:'— Current',cls:'badge-gray'}};
+
+  let html = `
+    <div class="page-header">
+      <div><div class="page-title">House Accounts</div><div class="page-subtitle">Monthly billing for recurring business customers</div></div>
+      <button class="btn-primary" onclick="showToast('Account creation form would open','info')">+ Add Account</button>
+    </div>
+    <div class="card">
+      <table class="data-grid">
+        <thead><tr><th>Business Name</th><th>Contact</th><th class="num">Current Balance</th><th>Last Billed</th><th>Status</th><th class="actions">Actions</th></tr></thead>
+        <tbody>
+          ${state.accounts.map((a, i) => `<tr>
+            <td style="font-weight:600">${a.name}</td>
+            <td>${a.contact}</td>
+            <td class="num">${fmt(a.balance)}</td>
+            <td>${a.lastBilled || '—'}</td>
+            <td><span class="badge ${statusMap[a.status].cls}">${statusMap[a.status].label}</span></td>
+            <td class="actions"><a onclick="state.expandedAccount=${i};renderHouseAccounts()">View</a></td>
+          </tr>
+          ${state.expandedAccount===i ? `<tr><td colspan="6" style="padding:0;border:none"><div style="padding:16px 24px;background:#fafafa;border-top:1px solid #e3e3e3">${renderAccountDetail(a,i)}</div></td></tr>` : ''}
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  $('#view-house-accounts').innerHTML = html;
+}
+
+function renderAccountDetail(a, i) {
+  const isBilled = a.status === 'billed';
+  const isOutstanding = a.status === 'outstanding';
+
+  let banner = '';
+  if (isOutstanding) banner = `<div class="banner-warning mb-16">⚠ This account has NOT been billed for the current period. Outstanding balance: ${fmt(a.balance)}</div>`;
+  else if (isBilled) banner = `<div class="banner-success mb-16">✓ This account was billed on ${a.lastBilled} for ${fmt(a.balance)}</div>`;
+
+  // Sample orders
+  const sampleOrders = a.name === 'Manchester University' ? `
+    <table class="data-grid" style="margin:12px 0">
+      <thead><tr><th>Date</th><th>Order #</th><th>Recipient/Event</th><th>Products</th><th class="num">Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Mar 5</td><td>#987</td><td>Spring Gala</td><td>Centerpieces (8)</td><td class="num">$280.00</td></tr>
+        <tr><td>Mar 12</td><td>#1003</td><td>President's Office</td><td>Thank You Bouquets (3)</td><td class="num">$135.00</td></tr>
+        <tr><td>Mar 22</td><td>#1031</td><td>Graduation Setup</td><td>Stage Arrangements (2)</td><td class="num">$100.00</td></tr>
+      </tbody>
+    </table>
+    <div style="text-align:right;font-weight:600;font-size:13px">Period Total: ${fmt(a.balance)}</div>
+  ` : `<div class="text-muted" style="padding:12px 0">No orders this period.</div>`;
+
+  return `
+    ${banner}
+    <div style="display:flex;gap:24px;margin-bottom:12px">
+      <div><span class="text-muted">Phone:</span> (260) 982-5000</div>
+      <div><span class="text-muted">Email:</span> events@${a.name.toLowerCase().replace(/ /g,'')}.edu</div>
+    </div>
+    <div style="font-weight:600;margin:12px 0 4px">Orders This Period (March 2026)</div>
+    ${sampleOrders}
+    <div style="margin-top:12px">
+      <button class="btn-primary btn-sm" ${isBilled?'disabled':''} onclick="markAsBilled(${i})">${isBilled?'Already Billed This Period':'Mark as Billed'}</button>
+    </div>
+    <div style="font-weight:600;margin:16px 0 8px">Billing History</div>
+    <table class="data-grid">
+      <thead><tr><th>Period</th><th class="num">Total</th><th>Billed Date</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>February 2026</td><td class="num">$340.00</td><td>Feb 28, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
+        <tr><td>January 2026</td><td class="num">$195.00</td><td>Jan 30, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
+        <tr><td>December 2025</td><td class="num">$780.00</td><td>Jan 2, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
+      </tbody>
+    </table>
+  `;
+}
+
+function markAsBilled(i) {
+  state.accounts[i].status = 'billed';
+  state.accounts[i].lastBilled = 'Apr 3, 2026';
+  showToast(`${state.accounts[i].name} marked as billed for March 2026`);
+  renderHouseAccounts();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B6: CALENDAR
+   ═══════════════════════════════════════════════════════════════ */
+function renderCalendar() {
+  const deliveryCounts = {3:12,4:5,7:3,8:6,9:4,10:7,11:2,14:8,15:3,16:5,17:4,21:6,22:9,23:3,24:7,25:4,27:5,28:8,29:3,30:6};
+  // April 2026: starts on Wednesday (index 3), 30 days
+  const startDow = 3; // Wednesday
+  const daysInMonth = 30;
+  const today = 3;
+
+  let html = `
+    <div class="page-header">
+      <div><div class="page-title">Delivery Calendar</div><div class="page-subtitle">Manage delivery availability and view scheduled deliveries</div></div>
+    </div>
+    <div class="tab-toggle mb-16">
+      <button class="tab-toggle-btn ${state.calendarStore==='North Manchester'?'active':''}" onclick="state.calendarStore='North Manchester';showToast('Showing North Manchester calendar');renderCalendar()">North Manchester</button>
+      <button class="tab-toggle-btn ${state.calendarStore==='Fort Wayne'?'active':''}" onclick="state.calendarStore='Fort Wayne';showToast('Showing Fort Wayne calendar');renderCalendar()">Fort Wayne</button>
+    </div>
+    <div class="card">
+      <div style="text-align:center;font-size:17px;font-weight:700;margin-bottom:16px">April 2026</div>
+      <div class="calendar-grid">
+        <div class="cal-header">Sun</div><div class="cal-header">Mon</div><div class="cal-header">Tue</div><div class="cal-header">Wed</div><div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div>`;
+
+  // Empty cells before first day
+  for (let i = 0; i < startDow; i++) html += '<div class="cal-cell empty"></div>';
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dow = (startDow + day - 1) % 7;
+    const isBlocked = state.calendarBlocked[day];
+    const isPast = day < today;
+    const isToday = day === today;
+    const isSunday = dow === 0;
+    const deliveries = deliveryCounts[day] || 0;
+
+    let classes = 'cal-cell';
+    if (isToday) classes += ' today';
+    if (isPast) classes += ' past';
+    if (isBlocked || isSunday) classes += ' blocked';
+
+    const clickAction = isPast || (isSunday) ? '' : `onclick="toggleBlock(${day})"`;
+
+    html += `<div class="${classes}" ${clickAction}>
+      <div class="cal-day">${day}</div>
+      ${(isBlocked || isSunday) ? '<div class="cal-blocked-label">BLOCKED</div>' : ''}
+      ${deliveries && !(isBlocked || isSunday) ? `<div class="cal-info">${deliveries} deliveries</div>` : ''}
+    </div>`;
+  }
+
+  html += `</div></div>
+    <div class="banner-info mt-16">☀ Same-day delivery cutoff: 12:00 PM. Current time: 10:30 AM — Same-day delivery is <strong>AVAILABLE</strong> today.</div>
+    <div class="text-muted mt-8" style="font-size:12px">Blocked dates are automatically hidden from customers during checkout. Changes take effect immediately.</div>
+  `;
+  $('#view-calendar').innerHTML = html;
+}
+
+function toggleBlock(day) {
+  if (state.calendarBlocked[day]) {
+    delete state.calendarBlocked[day];
+    showToast(`April ${day} unblocked for ${state.calendarStore}.`);
+  } else {
+    state.calendarBlocked[day] = true;
+    showToast(`April ${day} blocked for ${state.calendarStore}. Customers will not be able to select this date.`);
+  }
+  renderCalendar();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B7: SUBSCRIPTIONS
+   ═══════════════════════════════════════════════════════════════ */
+function renderSubscriptions() {
+  const statusMap = {Active:'badge-green',Paused:'badge-yellow'};
+
+  let html = `
+    <div class="page-header">
+      <div><div class="page-title">Subscriptions & Standing Orders</div><div class="page-subtitle">Manage recurring flower deliveries for your regular customers</div></div>
+      <button class="btn-primary" onclick="showToast('Subscription creation form coming soon','info')">+ New Subscription</button>
+    </div>
+    <div class="banner-info mb-16">ℹ This module is in detailed scoping. Shown here as a preview of planned functionality.</div>
+    <div class="card">
+      <table class="data-grid">
+        <thead><tr><th>Customer</th><th>Product</th><th>Frequency</th><th>Next Delivery</th><th>Store</th><th>Status</th><th class="actions">Actions</th></tr></thead>
+        <tbody>
+          ${state.subscriptions.map((s, i) => `<tr>
+            <td style="font-weight:600">${s.customer}</td>
+            <td>${s.product}</td>
+            <td>${s.freq}</td>
+            <td>${s.next}</td>
+            <td>${s.store}</td>
+            <td><span class="badge ${statusMap[s.status]}">${s.status}</span></td>
+            <td class="actions"><a onclick="state.expandedSub=${state.expandedSub===i?null:i};renderSubscriptions()">Manage</a></td>
+          </tr>
+          ${state.expandedSub===i ? `<tr><td colspan="7" style="padding:0;border:none"><div style="padding:16px 24px;background:#fafafa;border-top:1px solid #e3e3e3">
+            <div class="detail-grid" style="max-width:500px">
+              <div class="detail-label">Customer</div><div class="detail-value">${s.customer}${s.contact?' ('+s.contact+')':''}</div>
+              <div class="detail-label">Product</div><div class="detail-value">${s.product} — ${s.desc}</div>
+              <div class="detail-label">Frequency</div><div class="detail-value">${s.schedule}</div>
+              <div class="detail-label">Delivery Address</div><div class="detail-value">${s.address}</div>
+              <div class="detail-label">Next Delivery</div><div class="detail-value">${s.next}</div>
+              <div class="detail-label">Started</div><div class="detail-value">${s.started}</div>
+              <div class="detail-label">Total Deliveries</div><div class="detail-value">${s.totalDeliveries}</div>
+              <div class="detail-label">Status</div><div class="detail-value"><span class="badge ${statusMap[s.status]}">${s.status}</span></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:16px">
+              <button class="btn-${s.status==='Active'?'secondary':'success'} btn-sm" onclick="toggleSubStatus(${i})">${s.status==='Active'?'Pause Subscription':'Resume Subscription'}</button>
+              <button class="btn-secondary btn-sm" onclick="showToast('Edit details form would open','info')">Edit Details</button>
+              <button class="btn-danger btn-sm" onclick="showToast('Subscription cancellation would require confirmation','info')">Cancel Subscription</button>
+            </div>
+          </div></td></tr>` : ''}
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  $('#view-subscriptions').innerHTML = html;
+}
+
+function toggleSubStatus(i) {
+  const s = state.subscriptions[i];
+  if (s.status === 'Active') {
+    s.status = 'Paused';
+    showToast('Subscription paused. Next delivery skipped.');
+  } else {
+    s.status = 'Active';
+    showToast('Subscription resumed.');
+  }
+  renderSubscriptions();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════ */
+renderDeliveries();
+</script>
+
+</body>
+</html>
