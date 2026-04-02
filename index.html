@@ -192,8 +192,9 @@ button { cursor: pointer; }
   border: 1px solid #d4d4d4; border-radius: 8px;
   padding: 7px 10px; font-size: 13px; font-family: inherit;
   width: 100%; transition: border-color 0.15s, box-shadow 0.15s;
-  background: #fff; color: #303030;
+  background: #fff; color: #303030; height: 36px;
 }
+.form-textarea { height: auto; }
 .form-input:focus, .form-select:focus, .form-textarea:focus {
   outline: none; border-color: #005bd3; box-shadow: 0 0 0 2px rgba(0,91,211,0.15);
 }
@@ -230,22 +231,28 @@ button { cursor: pointer; }
 .banner-warning { background: #fff5e1; border: 1px solid #f0d98d; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #9e6c00; }
 
 /* ═══════════════════════════════════════════════════════════════
-   TOAST NOTIFICATIONS
+   TOAST NOTIFICATIONS (fixed bottom-right)
    ═══════════════════════════════════════════════════════════════ */
 .toast-container {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding-top: 0; pointer-events: none;
+  position: fixed; bottom: 24px; right: 24px; z-index: 200;
+  display: flex; flex-direction: column-reverse; gap: 8px;
+  pointer-events: none; max-width: 400px;
 }
 .toast {
-  padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
-  animation: slideDown 0.25s ease-out; pointer-events: auto;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  padding: 10px 16px 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 500;
+  animation: slideInRight 0.25s ease-out; pointer-events: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex; align-items: center; gap: 10px; min-width: 280px;
+  border-left-width: 3px; border-left-style: solid;
 }
-.toast-success { background: #e4f5e9; border: 1px solid #a3d9b1; color: #1f7a3f; }
-.toast-error { background: #fde8e8; border: 1px solid #f5b4b4; color: #d72c0d; }
-.toast-info { background: #eef6ff; border: 1px solid #bbd4f0; color: #1f5199; }
-@keyframes slideDown { from { transform: translateY(-6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.toast-success { background: #e4f5e9; border-color: #a3d9b1; border-left-color: #1f7a3f; color: #1f7a3f; }
+.toast-error { background: #fde8e8; border-color: #f5b4b4; border-left-color: #d72c0d; color: #d72c0d; }
+.toast-info { background: #eef6ff; border-color: #bbd4f0; border-left-color: #005bd3; color: #1f5199; }
+.toast-msg { flex: 1; }
+.toast-close { background: none; border: none; cursor: pointer; font-size: 16px; line-height: 1; padding: 0 2px; opacity: 0.6; color: inherit; }
+.toast-close:hover { opacity: 1; }
+@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeOutRight { to { transform: translateX(110%); opacity: 0; } }
 
 /* ═══════════════════════════════════════════════════════════════
    DATA GRID TABLE
@@ -258,7 +265,6 @@ button { cursor: pointer; }
 }
 .data-grid tbody td { padding: 10px 12px; border-bottom: 1px solid #f1f1f1; font-size: 13px; vertical-align: middle; }
 .data-grid tbody tr:hover { background: #fafafa; }
-.data-grid tbody tr.clickable { cursor: pointer; }
 .data-grid .num { font-variant-numeric: tabular-nums; text-align: right; }
 .data-grid .actions { text-align: right; }
 
@@ -283,12 +289,13 @@ button { cursor: pointer; }
 /* ═══════════════════════════════════════════════════════════════
    SUMMARY CARDS ROW
    ═══════════════════════════════════════════════════════════════ */
-.summary-row { display: flex; gap: 12px; margin-bottom: 16px; }
+.summary-row { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .summary-card {
   flex: 1; border-radius: 10px; padding: 14px 16px; border: 1px solid #e3e3e3;
-  background: #fff;
+  background: #fff; min-width: 100px; cursor: pointer; transition: box-shadow 0.15s;
 }
-.summary-card-label { font-size: 12px; color: #616161; margin-bottom: 4px; }
+.summary-card:hover { box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.summary-card-label { font-size: 11px; color: #616161; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; font-weight: 600; }
 .summary-card-value { font-size: 22px; font-weight: 700; color: #303030; }
 .summary-card.dark { background: #303030; border-color: #303030; }
 .summary-card.dark .summary-card-label { color: #b5b5b5; }
@@ -324,7 +331,7 @@ button { cursor: pointer; }
    FILTER BAR
    ═══════════════════════════════════════════════════════════════ */
 .filter-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.filter-bar .form-input { max-width: 280px; }
+.filter-bar .form-input { max-width: 280px; height: 36px; }
 .filter-bar .form-select { max-width: 180px; height: 36px; }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -422,7 +429,50 @@ button { cursor: pointer; }
 /* ═══════════════════════════════════════════════════════════════
    NOTIFICATION DOT
    ═══════════════════════════════════════════════════════════════ */
-.notif-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f0ad4e; margin-right: 4px; vertical-align: middle; }
+
+/* ═══════════════════════════════════════════════════════════════
+   STATUS DOT (next to badge in orders table)
+   ═══════════════════════════════════════════════════════════════ */
+.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.status-dot-pending { background: #e8a0a0; }
+.status-dot-ready { background: #005bd3; }
+.status-dot-taken { background: #f0ad4e; }
+.status-dot-delivered { background: #1f7a3f; }
+
+/* Inline status select — maps to Polaris <s-select> */
+.status-select {
+  border: 1px solid #d4d4d4; border-radius: 8px; padding: 4px 10px;
+  font-size: 12px; font-family: inherit; background: #fff; color: #303030;
+  height: 30px; cursor: pointer; min-width: 160px;
+}
+.status-select:focus { outline: none; border-color: #005bd3; box-shadow: 0 0 0 2px rgba(0,91,211,0.15); }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   MODAL OVERLAY
+   ═══════════════════════════════════════════════════════════════ */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: flex; align-items: center; justify-content: center; }
+.modal-card { background: #fff; border-radius: 12px; padding: 24px; width: 480px; max-width: calc(100vw - 48px); max-height: calc(100vh - 48px); overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.modal-title { font-size: 16px; font-weight: 700; }
+.modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #616161; line-height: 1; padding: 0; }
+.modal-close:hover { color: #303030; }
+.modal-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid #e3e3e3; }
+
+/* ═══════════════════════════════════════════════════════════════
+   ACTIVITY TIMELINE
+   ═══════════════════════════════════════════════════════════════ */
+.timeline { list-style: none; margin-top: 12px; }
+.timeline-item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f1f1f1; font-size: 12px; }
+.timeline-item:last-child { border-bottom: none; }
+.timeline-date { color: #919191; white-space: nowrap; min-width: 160px; }
+.timeline-type { font-weight: 600; white-space: nowrap; }
+.timeline-type.type-store { color: #616161; }
+.timeline-type.type-system { color: #616161; }
+.timeline-type.type-email { color: #1f7a3f; }
+.timeline-type.type-status { color: #005bd3; }
+.timeline-type.type-payment { color: #005bd3; }
+.timeline-msg { flex: 1; color: #303030; }
 
 /* ═══════════════════════════════════════════════════════════════
    UTILITY
@@ -528,7 +578,6 @@ button { cursor: pointer; }
      MAIN CONTENT AREA
      ═══════════════════════════════════════════════════════════════ -->
 <main class="admin-main" id="admin-main">
-  <div class="toast-container" id="toast-container"></div>
   <div class="admin-content">
 
     <!-- App Header -->
@@ -549,53 +598,29 @@ button { cursor: pointer; }
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════
-         VIEW: DELIVERIES (B1)
-         ════════════════════════════════════════════════════════════ -->
     <div data-view="deliveries" id="view-deliveries"></div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         VIEW: NEW ORDER (B2)
-         ════════════════════════════════════════════════════════════ -->
     <div data-view="new-order" id="view-new-order" class="view-hidden"></div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         VIEW: ORDERS (B3)
-         ════════════════════════════════════════════════════════════ -->
     <div data-view="orders" id="view-orders" class="view-hidden"></div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         VIEW: ORDER DETAIL (B3A)
-         ════════════════════════════════════════════════════════════ -->
     <div data-view="order-detail" id="view-order-detail" class="view-hidden"></div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         VIEW: PROPOSALS (B4A)
-         ════════════════════════════════════════════════════════════ -->
     <div data-view="proposals" id="view-proposals" class="view-hidden"></div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         VIEW: PROPOSAL EDITOR (B4B)
-         ════════════════════════════════════════════════════════════ -->
     <div data-view="proposal-editor" id="view-proposal-editor" class="view-hidden"></div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         VIEW: HOUSE ACCOUNTS (B5)
-         ════════════════════════════════════════════════════════════ -->
     <div data-view="house-accounts" id="view-house-accounts" class="view-hidden"></div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         VIEW: CALENDAR (B6)
-         ════════════════════════════════════════════════════════════ -->
     <div data-view="calendar" id="view-calendar" class="view-hidden"></div>
-
-    <!-- ════════════════════════════════════════════════════════════
-         VIEW: SUBSCRIPTIONS (B7)
-         ════════════════════════════════════════════════════════════ -->
     <div data-view="subscriptions" id="view-subscriptions" class="view-hidden"></div>
 
   </div>
 </main>
+
+<!-- Toast container (fixed, outside main scroll area) -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Payment Modal (hidden by default) -->
+<div id="payment-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closePaymentModal()">
+  <div class="modal-card">
+    <div class="modal-header"><div class="modal-title">Payment Info</div><button class="modal-close" onclick="closePaymentModal()">&times;</button></div>
+    <div id="payment-modal-body"></div>
+  </div>
+</div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
@@ -629,13 +654,16 @@ const state = {
   activeStore: 'North Manchester',
   deliveryFilter: 'all',
   orderCart: [],
-  orderForm: {fulfillment:'delivery',orderType:'phone',zip:''},
+  orderForm: {fulfillment:'delivery',orderType:'phone',zip:'',paymentMethod:'pos'},
   selectedOrderId: null,
   selectedProposalIdx: null,
   expandedAccount: null,
   calendarBlocked: {5:true,6:true,12:true,19:true,20:true,26:true},
   calendarStore: 'North Manchester',
   expandedSub: null,
+  proposalFilter: 'All',
+  orderDateFilter: 'all',
+  paymentModalOrderId: null,
   deliveries: [
     {id:'1047',type:'Online',status:'pending',recipient:'Martha Hendricks',address:'1425 Oak Street, North Manchester, IN 46962',products:['Blooming Bliss Bouquet (1)','Plush Bear (1)'],card:'Happy Birthday Mom! Love, Sarah',date:'April 3, 2026'},
     {id:'1048',type:'Phone',status:'pending',recipient:'David & Karen Wilson',address:'3200 W Jefferson Blvd, Fort Wayne, IN 46804',products:['Dozen Red Roses (1)'],card:'Happy Anniversary! 25 years strong.',date:'April 3, 2026'},
@@ -651,18 +679,20 @@ const state = {
     {id:'1058',type:'Online',status:'delivered',recipient:'Amy Richards',address:'240 S Main St, North Manchester, IN 46962',products:['The One For Me Arrangement (1)','Bryan Anthonys Necklace (1)'],card:'Forever yours — James',date:'April 3, 2026',deliveredAt:'11:15 AM'}
   ],
   orders: [
-    {id:'1058',date:'Apr 3',sender:'James Richards',recipient:'Amy Richards',type:'Online',fulfillment:'Delivery',status:'Delivered',total:82.99,alert:false},
-    {id:'1057',date:'Apr 3',sender:'College Roommate',recipient:'Susan Mitchell',type:'Phone',fulfillment:'Delivery',status:'Delivered',total:49.99,alert:false},
-    {id:'1056',date:'Apr 3',sender:'R&R Spring Promo',recipient:'Maple Crest Senior Living',type:'Online',fulfillment:'Delivery',status:'Taken',total:89.98,alert:false},
-    {id:'1055',date:'Apr 3',sender:'Walk-in Customer',recipient:'Jennifer Blake',type:'Walk-in',fulfillment:'Delivery',status:'Taken',total:49.99,alert:false},
-    {id:'1054',date:'Apr 3',sender:'The Smith Family',recipient:'Parkview Hospital Rm 312',type:'Walk-in',fulfillment:'Delivery',status:'Taken',total:52.98,alert:false},
-    {id:'1053',date:'Apr 3',sender:'R&R Web Order',recipient:'Rachel & Tom Crawford',type:'Online',fulfillment:'Delivery',status:'Ready',total:54.99,alert:false},
-    {id:'1052',date:'Apr 3',sender:'Mrs. Patterson',recipient:'Linda Patterson',type:'Phone',fulfillment:'Delivery',status:'Ready',total:89.98,alert:false},
-    {id:'1051',date:'Apr 3',sender:'School Admin',recipient:'N. Manchester High School',type:'Online',fulfillment:'Delivery',status:'Ready',total:164.97,alert:false},
-    {id:'1050',date:'Apr 3',sender:'Walk-in Customer',recipient:'Emily Torres',type:'Walk-in',fulfillment:'Delivery',status:'Pending',total:44.99,alert:false},
-    {id:'1049',date:'Apr 3',sender:'Johnson Family',recipient:'Grace Memorial Church',type:'Online',fulfillment:'Delivery',status:'Pending',total:119.98,alert:true},
-    {id:'1048',date:'Apr 3',sender:'Mike Wilson',recipient:'David & Karen Wilson',type:'Phone',fulfillment:'Delivery',status:'Pending',total:79.99,alert:false},
-    {id:'1047',date:'Apr 3',sender:'Sarah Hendricks',recipient:'Martha Hendricks',type:'Online',fulfillment:'Delivery',status:'Pending',total:77.98,alert:true}
+    {id:'1058',date:'Apr 3',deliveryDate:'Apr 3',sender:'James Richards',senderPhone:'(260) 555-0198',senderEmail:'james.richards@gmail.com',recipient:'Amy Richards',recipientAddress:'240 S Main St, North Manchester, IN 46962',type:'Online',fulfillment:'Delivery',status:'Delivered',store:'North Manchester',employee:'Jirni C.',designer:'Josi C.',total:102.98,subtotal:102.98,deliveryFee:0,tax:0,paymentMethod:'Stripe',paymentStatus:'Paid',cardMessage:'Forever yours — James',deliveryInstructions:'Leave at side door',products:[{name:'Blooming Bliss Bouquet',qty:1,price:64.99},{name:'Bryan Anthonys Necklace',qty:1,price:38.00}],alert:false,ticketPrinted:true,printedOn:'Apr 3, 2026',notes:[{date:'Apr 3, 2026 11:15 AM',type:'status',message:'Order marked as Delivered'},{date:'Apr 3, 2026 9:30 AM',type:'status',message:'Order marked as Ready for Delivery'},{date:'Apr 3, 2026 9:15 AM',type:'email',message:'Your order has been received! Thank you for trusting Rhinestones and Roses.'},{date:'Apr 3, 2026 9:12 AM',type:'system',message:'Order was created (Online via Stripe)'}]},
+    {id:'1057',date:'Apr 3',deliveryDate:'Apr 3',sender:'College Roommate',senderPhone:'(317) 555-0234',senderEmail:'roommate@gmail.com',recipient:'Susan Mitchell',recipientAddress:'1100 N Wabash Ave, Huntington, IN 46750',type:'Phone',fulfillment:'Delivery',status:'Delivered',store:'North Manchester',employee:'Lara M.',designer:'Jentri C.',total:63.98,subtotal:49.99,deliveryFee:13.99,tax:0,paymentMethod:'Shopify POS',paymentStatus:'Paid',cardMessage:'Miss you! — Your College Roommate',deliveryInstructions:'Call when arriving',products:[{name:'Purple Craze',qty:1,price:49.99}],alert:false,ticketPrinted:true,printedOn:'Apr 3, 2026',notes:[{date:'Apr 3, 2026 10:42 AM',type:'status',message:'Order marked as Delivered'},{date:'Apr 3, 2026 9:00 AM',type:'store',message:'Payment processed via Shopify POS'},{date:'Apr 3, 2026 8:50 AM',type:'system',message:'Order was created (Phone)'}]},
+    {id:'1056',date:'Apr 3',deliveryDate:'Apr 3',sender:'R&R Spring Promo',senderPhone:'(260) 982-7100',senderEmail:'orders@rnrflorist.com',recipient:'Maple Crest Senior Living',recipientAddress:'750 Maple Crest Dr, Wabash, IN 46992',type:'Online',fulfillment:'Delivery',status:'Taken',store:'North Manchester',employee:'Jirni C.',designer:'Kyra T.',total:101.97,subtotal:89.98,deliveryFee:11.99,tax:0,paymentMethod:'Stripe',paymentStatus:'Paid',cardMessage:'Happy Spring from Rhinestones & Roses',deliveryInstructions:'Deliver to front reception desk',products:[{name:'Wrapped Designer\'s Choice Bouquet',qty:2,price:44.99}],alert:false,ticketPrinted:true,printedOn:'Apr 3, 2026',notes:[{date:'Apr 3, 2026 10:00 AM',type:'status',message:'Order marked as Out for Delivery'},{date:'Apr 3, 2026 9:15 AM',type:'email',message:'Your order has been received!'},{date:'Apr 3, 2026 9:10 AM',type:'system',message:'Order was created (Online via Stripe)'}]},
+    {id:'1055',date:'Apr 3',deliveryDate:'Apr 3',sender:'Walk-in Customer',senderPhone:'',senderEmail:'',recipient:'Jennifer Blake',recipientAddress:'305 E Main St, North Manchester, IN 46962',type:'Walk-in',fulfillment:'Delivery',status:'Taken',store:'North Manchester',employee:'Josi C.',designer:'Josi C.',total:59.98,subtotal:49.99,deliveryFee:9.99,tax:0,paymentMethod:'Shopify POS',paymentStatus:'Paid',cardMessage:'Just because you\'re amazing!',deliveryInstructions:'',products:[{name:'Genuine & Joyful',qty:1,price:49.99}],alert:false,ticketPrinted:true,printedOn:'Apr 3, 2026',notes:[{date:'Apr 3, 2026 9:45 AM',type:'status',message:'Order marked as Out for Delivery'},{date:'Apr 3, 2026 9:30 AM',type:'store',message:'Payment processed via Shopify POS'},{date:'Apr 3, 2026 9:28 AM',type:'system',message:'Order was created (Walk-in)'}]},
+    {id:'1054',date:'Apr 3',deliveryDate:'Apr 3',sender:'The Smith Family',senderPhone:'(260) 555-0311',senderEmail:'smithfamily@email.com',recipient:'Parkview Hospital Rm 312',recipientAddress:'2200 Randallia Dr, Fort Wayne, IN 46805',type:'Walk-in',fulfillment:'Delivery',status:'Taken',store:'Fort Wayne',employee:'Lara M.',designer:'Lara M.',total:60.97,subtotal:47.98,deliveryFee:12.99,tax:0,paymentMethod:'Shopify POS',paymentStatus:'Paid',cardMessage:'Wishing you a speedy recovery — The Smiths',deliveryInstructions:'Deliver to nurses station, Room 312',products:[{name:'Simply Kind',qty:1,price:39.99},{name:'Get Well Balloon',qty:1,price:7.99}],alert:false,ticketPrinted:true,printedOn:'Apr 3, 2026',notes:[{date:'Apr 3, 2026 9:50 AM',type:'status',message:'Order marked as Out for Delivery'},{date:'Apr 3, 2026 9:20 AM',type:'store',message:'Payment processed via Shopify POS'},{date:'Apr 3, 2026 9:18 AM',type:'system',message:'Order was created (Walk-in)'}]},
+    {id:'1053',date:'Apr 3',deliveryDate:'Apr 3',sender:'R&R Web Order',senderPhone:'(260) 555-0177',senderEmail:'crawford.rt@email.com',recipient:'Rachel & Tom Crawford',recipientAddress:'4510 Homestead Rd, Fort Wayne, IN 46814',type:'Online',fulfillment:'Delivery',status:'Ready',store:'Fort Wayne',employee:'Jirni C.',designer:'Kyra T.',total:67.98,subtotal:54.99,deliveryFee:12.99,tax:0,paymentMethod:'Stripe',paymentStatus:'Paid',cardMessage:'Thank you for everything!',deliveryInstructions:'Ring doorbell twice',products:[{name:'Heartwarming Hydrangeas',qty:1,price:54.99}],alert:false,ticketPrinted:true,printedOn:'Apr 3, 2026',notes:[{date:'Apr 3, 2026 9:30 AM',type:'status',message:'Order marked as Ready for Delivery'},{date:'Apr 3, 2026 9:15 AM',type:'email',message:'Your order has been received!'},{date:'Apr 3, 2026 9:10 AM',type:'system',message:'Order was created (Online via Stripe)'}]},
+    {id:'1052',date:'Apr 3',deliveryDate:'Apr 3',sender:'Mrs. Patterson',senderPhone:'(260) 555-0288',senderEmail:'l.patterson@email.com',recipient:'Linda Patterson',recipientAddress:'1902 State Road 13, Silver Lake, IN 46982',type:'Phone',fulfillment:'Delivery',status:'Ready',store:'North Manchester',employee:'Lara M.',designer:'Josi C.',total:100.97,subtotal:89.98,deliveryFee:10.99,tax:0,paymentMethod:'Shopify POS',paymentStatus:'Paid',cardMessage:'Thinking of you — Love, Mom',deliveryInstructions:'',products:[{name:'Perfectly Plum',qty:1,price:59.99},{name:'Capri Blue Candle',qty:1,price:29.99}],alert:false,ticketPrinted:true,printedOn:'Apr 3, 2026',notes:[{date:'Apr 3, 2026 9:25 AM',type:'status',message:'Order marked as Ready for Delivery'},{date:'Apr 3, 2026 8:45 AM',type:'store',message:'Payment processed via Shopify POS'},{date:'Apr 3, 2026 8:40 AM',type:'system',message:'Order was created (Phone)'}]},
+    {id:'1051',date:'Apr 3',deliveryDate:'Apr 3',sender:'School Admin',senderPhone:'(260) 982-1234',senderEmail:'admin@nmhs.k12.in.us',recipient:'N. Manchester High School',recipientAddress:'511 W Main St, North Manchester, IN 46962',type:'Online',fulfillment:'Delivery',status:'Ready',store:'North Manchester',employee:'Jirni C.',designer:'Jentri C.',total:174.96,subtotal:164.97,deliveryFee:9.99,tax:0,paymentMethod:'Stripe',paymentStatus:'Paid',cardMessage:'Congratulations to the Class of 2026!',deliveryInstructions:'Deliver to main office before 2pm',products:[{name:'Cotton Candy Love',qty:3,price:54.99}],alert:false,ticketPrinted:false,printedOn:null,notes:[{date:'Apr 3, 2026 9:20 AM',type:'status',message:'Order marked as Ready for Delivery'},{date:'Apr 3, 2026 9:15 AM',type:'email',message:'Your order has been received!'},{date:'Apr 3, 2026 9:12 AM',type:'system',message:'Order was created (Online via Stripe)'}]},
+    {id:'1050',date:'Apr 3',deliveryDate:'Apr 4',sender:'Walk-in Customer',senderPhone:'(260) 555-0422',senderEmail:'',recipient:'Emily Torres',recipientAddress:'78 Sycamore Lane, Wabash, IN 46992',type:'Walk-in',fulfillment:'Delivery',status:'Pending',store:'North Manchester',employee:'Josi C.',designer:'',total:56.98,subtotal:44.99,deliveryFee:11.99,tax:0,paymentMethod:'COD',paymentStatus:'COD',cardMessage:'Get well soon! We miss you at work.',deliveryInstructions:'Leave at front porch',products:[{name:'Sunshine Delight',qty:1,price:44.99}],alert:false,ticketPrinted:false,printedOn:null,notes:[{date:'Apr 3, 2026 8:30 AM',type:'store',message:'Customer opted out of email receipt'},{date:'Apr 3, 2026 8:30 AM',type:'system',message:'Order was created (Walk-in, COD)'}]},
+    {id:'1049',date:'Apr 3',deliveryDate:'Apr 3',sender:'Johnson Family',senderPhone:'(260) 555-0156',senderEmail:'johnson.family@email.com',recipient:'Grace Memorial Church',recipientAddress:'502 N Market St, North Manchester, IN 46962',type:'Online',fulfillment:'Delivery',status:'Pending',store:'North Manchester',employee:'Jirni C.',designer:'',total:129.97,subtotal:119.98,deliveryFee:9.99,tax:0,paymentMethod:'Stripe',paymentStatus:'Paid',cardMessage:'With deepest sympathy — The Johnson Family',deliveryInstructions:'Deliver to church office, side entrance',products:[{name:'Dearest Sympathy Lantern with Flowers',qty:1,price:74.99},{name:'Peace Lily Plant',qty:1,price:44.99}],alert:true,ticketPrinted:false,printedOn:null,notes:[{date:'Apr 3, 2026 8:15 AM',type:'email',message:'Your order has been received! Thank you for trusting Rhinestones and Roses.'},{date:'Apr 3, 2026 8:12 AM',type:'system',message:'Order was created (Online via Stripe)'}]},
+    {id:'1048',date:'Apr 3',deliveryDate:'Apr 3',sender:'Mike Wilson',senderPhone:'(260) 555-0209',senderEmail:'mike.wilson@email.com',recipient:'David & Karen Wilson',recipientAddress:'3200 W Jefferson Blvd, Fort Wayne, IN 46804',type:'Phone',fulfillment:'Delivery',status:'Pending',store:'Fort Wayne',employee:'Lara M.',designer:'',total:92.98,subtotal:79.99,deliveryFee:12.99,tax:0,paymentMethod:'Shopify POS',paymentStatus:'Paid',cardMessage:'Happy Anniversary! 25 years strong.',deliveryInstructions:'',products:[{name:'Dozen Red Roses with Filler',qty:1,price:79.99}],alert:false,ticketPrinted:false,printedOn:null,notes:[{date:'Apr 3, 2026 8:05 AM',type:'store',message:'Payment processed via Shopify POS'},{date:'Apr 3, 2026 8:00 AM',type:'system',message:'Order was created (Phone)'}]},
+    {id:'1047',date:'Apr 3',deliveryDate:'Apr 3',sender:'Sarah Hendricks',senderPhone:'(260) 555-0147',senderEmail:'sarah.hendricks@gmail.com',recipient:'Martha Hendricks',recipientAddress:'1425 Oak Street, North Manchester, IN 46962',type:'Online',fulfillment:'Delivery',status:'Pending',store:'North Manchester',employee:'Jirni C.',designer:'Josi C.',total:87.97,subtotal:77.98,deliveryFee:9.99,tax:0,paymentMethod:'Stripe',paymentStatus:'Paid',cardMessage:'Happy Birthday Mom! Love, Sarah',deliveryInstructions:'Please leave at the front door if no one answers',products:[{name:'Blooming Bliss Bouquet',qty:1,price:64.99},{name:'Plush Bear',qty:1,price:12.99}],alert:true,ticketPrinted:false,printedOn:null,notes:[{date:'Apr 3, 2026 7:45 AM',type:'email',message:'Your order has been received! Thank you for trusting Rhinestones and Roses.'},{date:'Apr 3, 2026 7:42 AM',type:'system',message:'Order was created (Online via Stripe)'}]},
+    {id:'1046',date:'Apr 2',deliveryDate:'Apr 3',sender:'Mary Geiger',senderPhone:'(260) 555-0399',senderEmail:'',recipient:'Mary Geiger',recipientAddress:'',type:'Walk-in',fulfillment:'Pickup',status:'Pending',store:'Fort Wayne',employee:'Lara M.',designer:'Lara M.',total:21.40,subtotal:20.00,deliveryFee:0,tax:1.40,paymentMethod:'COD',paymentStatus:'COD',cardMessage:'',deliveryInstructions:'',products:[{name:'Daily Special Flower Design',qty:1,price:20.00}],alert:false,ticketPrinted:false,printedOn:null,notes:[{date:'Apr 2, 2026 5:40 PM',type:'store',message:'Customer opted out of email receipt'},{date:'Apr 2, 2026 5:40 PM',type:'system',message:'Order was created (Walk-in, COD)'}]},
+    {id:'1045',date:'Apr 2',deliveryDate:'Apr 4',sender:'Manchester University Events',senderPhone:'(260) 982-5000',senderEmail:'events@manchester.edu',recipient:'Manchester University',recipientAddress:'604 E College Ave, North Manchester, IN 46962',type:'Phone',fulfillment:'Delivery',status:'Pending',store:'North Manchester',employee:'Jirni C.',designer:'Jentri C.',total:224.97,subtotal:214.98,deliveryFee:9.99,tax:0,paymentMethod:'House Account',paymentStatus:'Pending',cardMessage:'Spring Faculty Reception',deliveryInstructions:'Deliver to Student Union, set up in ballroom',products:[{name:'Heartwarming Hydrangeas',qty:2,price:54.99},{name:'Wrapped Designer\'s Choice Bouquet',qty:2,price:44.99},{name:'Daily Special Flower Design',qty:1,price:14.99}],alert:false,ticketPrinted:false,printedOn:null,notes:[{date:'Apr 2, 2026 4:00 PM',type:'system',message:'Order was created (Phone, House Account — Manchester University)'}]}
   ],
   proposals: [
     {client:'Tyler & Jessica Cripe',eventDate:'Apr 26, 2026',eventType:'Wedding',venue:'The Brick at Blue Star, Fort Wayne',status:'Confirmed',total:3450.00,email:'cripe.jessica@gmail.com'},
@@ -693,11 +723,17 @@ const state = {
    ═══════════════════════════════════════════════════════════════ */
 function showToast(msg, type='success') {
   const c = $('#toast-container');
+  while (c.children.length >= 3) c.firstElementChild.remove();
   const t = document.createElement('div');
   t.className = 'toast toast-' + type;
-  t.textContent = msg;
+  t.innerHTML = '<span class="toast-msg">' + msg + '</span><button class="toast-close" onclick="this.parentElement.remove()">&times;</button>';
   c.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+  setTimeout(() => {
+    if (t.parentElement) {
+      t.style.animation = 'fadeOutRight 0.3s ease-in forwards';
+      setTimeout(() => { if (t.parentElement) t.remove(); }, 300);
+    }
+  }, 3000);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -705,17 +741,15 @@ function showToast(msg, type='success') {
    ═══════════════════════════════════════════════════════════════ */
 function switchView(name) {
   $$('[data-view]').forEach(el => el.classList.add('view-hidden'));
-  const target = $(`[data-view="${name}"]`);
+  const target = $('[data-view="' + name + '"]');
   if (target) target.classList.remove('view-hidden');
   $$('.sidebar-sub-item').forEach(el => el.classList.remove('active'));
-  // Map sub-views to their parent nav
   const navMap = {'order-detail':'orders','proposal-editor':'proposals'};
   const navId = navMap[name] || name;
-  const navEl = $(`#nav-${navId}`);
+  const navEl = $('#nav-' + navId);
   if (navEl) navEl.classList.add('active');
   state.currentView = name;
   $('#admin-main').scrollTop = 0;
-  // Render views on switch
   if (name === 'deliveries') renderDeliveries();
   else if (name === 'new-order') renderNewOrder();
   else if (name === 'orders') renderOrders();
@@ -726,12 +760,17 @@ function switchView(name) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   STORE TOGGLE
+   STORE TOGGLE (Change 7: re-renders current view)
    ═══════════════════════════════════════════════════════════════ */
 function toggleStore() {
   state.activeStore = state.activeStore === 'North Manchester' ? 'Fort Wayne' : 'North Manchester';
   $('#store-selector-text').textContent = state.activeStore;
   showToast('Switched to ' + state.activeStore);
+  // Re-render current view so store-dependent content updates
+  const v = state.currentView;
+  if (v === 'deliveries') renderDeliveries();
+  else if (v === 'orders') renderOrders();
+  else if (v === 'calendar') renderCalendar();
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -748,97 +787,111 @@ function getDeliveryCounts() {
   };
 }
 
-function statusBadge(s) {
-  const m = {pending:['Pending','badge-gray'],ready:['Ready for Delivery','badge-blue'],taken:['Out for Delivery','badge-yellow'],delivered:['Delivered','badge-green']};
-  const [label,cls] = m[s] || ['Unknown','badge-gray'];
-  return `<span class="badge ${cls}">${label}</span>`;
+function deliveryStatusDropdown(d) {
+  // 4 status options with colored dot to the right matching current status
+  // Maps to Polaris <s-select> with <s-option> children
+  var dotMap = {pending:'dot-pending',ready:'dot-ready',taken:'dot-taken',delivered:'dot-delivered'};
+  var dotClass = dotMap[d.status] || 'dot-pending';
+  var opts = [
+    {val:'pending', label:'Pending'},
+    {val:'ready', label:'Ready for Delivery'},
+    {val:'taken', label:'Out for Delivery'},
+    {val:'delivered', label:'Delivered'}
+  ];
+  var optionsHTML = opts.map(function(o) {
+    return '<option value="' + o.val + '"' + (d.status === o.val ? ' selected' : '') + '>' + o.label + '</option>';
+  }).join('');
+  return '<select class="status-select" onchange="updateDeliveryStatus(\'' + d.id + '\',this.value)">' + optionsHTML + '</select>';
 }
 
-function typeBadge(t) {
-  const cls = t==='Online'?'badge-blue':t==='Phone'?'badge-gray':'badge-yellow';
-  return `<span class="badge ${cls}" style="font-size:10px;text-transform:none">${t}</span>`;
-}
-
-function nextStatusBtn(d) {
-  const prog = ['pending','ready','taken','delivered'];
-  const i = prog.indexOf(d.status);
-  if (i >= prog.length - 1) return `<button class="btn-success btn-sm" disabled>✓ Delivered</button>`;
-  const labels = {0:'Mark Ready',1:'Mark Taken',2:'Mark Delivered'};
-  return `<button class="btn-primary btn-sm" onclick="advanceDelivery('${d.id}')">${labels[i]}</button>`;
-}
-
-function advanceDelivery(id) {
-  const d = state.deliveries.find(x=>x.id===id);
+function updateDeliveryStatus(id, val) {
+  var d = state.deliveries.find(function(x){return x.id===id;});
   if (!d) return;
-  const prog = ['pending','ready','taken','delivered'];
-  const i = prog.indexOf(d.status);
-  if (i < prog.length - 1) {
-    d.status = prog[i+1];
-    const labels = {ready:'Ready for Delivery',taken:'Taken',delivered:'Delivered'};
-    showToast(`Order #${id} marked as ${labels[d.status]}. Sender notification sent.`);
-    renderDeliveries();
+  var labels = {pending:'Pending',ready:'Ready for Delivery',taken:'Out for Delivery',delivered:'Delivered'};
+  d.status = val;
+  if (val === 'delivered') {
+    d.deliveredAt = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  } else {
+    d.deliveredAt = null;
   }
+  showToast('Order #' + id + ' marked as ' + labels[val] + '. Sender notified.');
+  renderDeliveries();
 }
 
 function renderDeliveries() {
   const c = getDeliveryCounts();
   const f = state.deliveryFilter;
-  const filtered = f==='all' ? state.deliveries : state.deliveries.filter(x=>x.status===f);
+  const filtered = f==='all' ? state.deliveries : state.deliveries.filter(function(x){return x.status===f;});
 
-  let html = `
-    <div class="page-header">
-      <div><div class="page-title">Deliveries Dashboard</div><div class="page-subtitle">Showing: ${state.activeStore}</div></div>
-    </div>
-    <div class="card mb-16" style="padding:14px 20px">
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <label class="form-label" style="margin:0">Date:</label>
-        <div style="display:flex;align-items:center;gap:4px">
-          <button class="btn-secondary btn-sm" style="padding:0 8px" onclick="showToast('Previous day','info')">←</button>
-          <input type="date" class="form-input" style="width:160px;height:32px" value="2026-04-03">
-          <button class="btn-secondary btn-sm" style="padding:0 8px" onclick="showToast('Next day','info')">→</button>
-        </div>
-        <div style="flex:1"></div>
-        <div class="tab-toggle">
-          <button class="tab-toggle-btn ${f==='all'?'active':''}" onclick="state.deliveryFilter='all';renderDeliveries()">All <span class="tab-count">(${c.all})</span></button>
-          <button class="tab-toggle-btn ${f==='pending'?'active':''}" onclick="state.deliveryFilter='pending';renderDeliveries()">Pending <span class="tab-count">(${c.pending})</span></button>
-          <button class="tab-toggle-btn ${f==='ready'?'active':''}" onclick="state.deliveryFilter='ready';renderDeliveries()">Ready <span class="tab-count">(${c.ready})</span></button>
-          <button class="tab-toggle-btn ${f==='taken'?'active':''}" onclick="state.deliveryFilter='taken';renderDeliveries()">Taken <span class="tab-count">(${c.taken})</span></button>
-          <button class="tab-toggle-btn ${f==='delivered'?'active':''}" onclick="state.deliveryFilter='delivered';renderDeliveries()">Delivered <span class="tab-count">(${c.delivered})</span></button>
-        </div>
-      </div>
-    </div>
-    <div class="summary-row">
-      <div class="summary-card dark"><div class="summary-card-label">Total Deliveries</div><div class="summary-card-value">${c.all}</div></div>
-      <div class="summary-card"><div class="summary-card-label">Pending</div><div class="summary-card-value">${c.pending}</div></div>
-      <div class="summary-card blue"><div class="summary-card-label">Ready for Delivery</div><div class="summary-card-value">${c.ready}</div></div>
-      <div class="summary-card yellow"><div class="summary-card-label">Out for Delivery</div><div class="summary-card-value">${c.taken}</div></div>
-      <div class="summary-card green"><div class="summary-card-label">Delivered</div><div class="summary-card-value">${c.delivered}</div></div>
-    </div>`;
-
-  filtered.forEach(d => {
-    html += `<div class="delivery-card">
-      <div class="delivery-left">
-        ${statusBadge(d.status)}
-        ${typeBadge(d.type)}
-      </div>
-      <div class="delivery-middle">
-        <div class="delivery-recipient">${d.recipient}</div>
-        <div class="delivery-address">${d.address}</div>
-        <div class="delivery-products">${d.products.map(p=>'<div>☐ '+p+'</div>').join('')}</div>
-        <div class="delivery-card-msg">"${d.card}"</div>
-        <div class="delivery-date">${d.date}${d.deliveredAt?' · Delivered '+d.deliveredAt:''}</div>
-      </div>
-      <div class="delivery-right">
-        ${nextStatusBtn(d)}
-        <div class="delivery-notify">Sender will be notified</div>
-      </div>
-    </div>`;
-  });
-
-  if (filtered.length === 0) {
-    html += '<div class="empty-state">No deliveries matching this filter.</div>';
+  // Bell icon for online orders needing printing
+  function bellIcon(d) {
+    return '';
   }
 
+  // Build order ID suffix like Floranext
+  function orderSuffix(d) {
+    if (d.type === 'Online') return '-Web';
+    return '';
+  }
+
+  var html = '\
+    <div class="page-header">\
+      <div><div class="page-title">Deliveries</div><div class="page-subtitle">Showing: ' + state.activeStore + '</div></div>\
+    </div>\
+    <div class="card mb-16" style="padding:14px 20px">\
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">\
+        <label class="form-label" style="margin:0">Date:</label>\
+        <div style="display:flex;align-items:center;gap:4px">\
+          <button class="btn-secondary btn-sm" style="padding:0 8px" onclick="showToast(\'Previous day\',\'info\')">&#8592;</button>\
+          <input type="date" class="form-input" style="width:160px;height:32px" value="2026-04-03">\
+          <button class="btn-secondary btn-sm" style="padding:0 8px" onclick="showToast(\'Next day\',\'info\')">&#8594;</button>\
+        </div>\
+        <div style="flex:1"></div>\
+        <div class="tab-toggle">\
+          <button class="tab-toggle-btn ' + (f==='all'?'active':'') + '" onclick="state.deliveryFilter=\'all\';renderDeliveries()">All <span class="tab-count">(' + c.all + ')</span></button>\
+          <button class="tab-toggle-btn ' + (f==='pending'?'active':'') + '" onclick="state.deliveryFilter=\'pending\';renderDeliveries()">Pending <span class="tab-count">(' + c.pending + ')</span></button>\
+          <button class="tab-toggle-btn ' + (f==='ready'?'active':'') + '" onclick="state.deliveryFilter=\'ready\';renderDeliveries()">Ready <span class="tab-count">(' + c.ready + ')</span></button>\
+          <button class="tab-toggle-btn ' + (f==='taken'?'active':'') + '" onclick="state.deliveryFilter=\'taken\';renderDeliveries()">Taken <span class="tab-count">(' + c.taken + ')</span></button>\
+          <button class="tab-toggle-btn ' + (f==='delivered'?'active':'') + '" onclick="state.deliveryFilter=\'delivered\';renderDeliveries()">Delivered <span class="tab-count">(' + c.delivered + ')</span></button>\
+        </div>\
+      </div>\
+    </div>\
+    <div class="summary-row">\
+      <div class="summary-card dark" onclick="state.deliveryFilter=\'all\';renderDeliveries()"><div class="summary-card-label">Total Deliveries</div><div class="summary-card-value">' + c.all + '</div></div>\
+      <div class="summary-card" onclick="state.deliveryFilter=\'pending\';renderDeliveries()"><div class="summary-card-label">Pending</div><div class="summary-card-value">' + c.pending + '</div></div>\
+      <div class="summary-card blue" onclick="state.deliveryFilter=\'ready\';renderDeliveries()"><div class="summary-card-label">Ready for Delivery</div><div class="summary-card-value">' + c.ready + '</div></div>\
+      <div class="summary-card yellow" onclick="state.deliveryFilter=\'taken\';renderDeliveries()"><div class="summary-card-label">Out for Delivery</div><div class="summary-card-value">' + c.taken + '</div></div>\
+      <div class="summary-card green" onclick="state.deliveryFilter=\'delivered\';renderDeliveries()"><div class="summary-card-label">Delivered</div><div class="summary-card-value">' + c.delivered + '</div></div>\
+    </div>\
+    <div class="card">\
+      <table class="data-grid">\
+        <thead><tr><th>Order ID</th><th>Order Date</th><th>Delivery Date</th><th>Sender</th><th>Recipient</th><th class="num">Grand Total</th><th>Action</th><th>Status</th></tr></thead>\
+        <tbody>';
+
+  if (filtered.length === 0) {
+    html += '<tr><td colspan="8" class="empty-state">No deliveries matching this filter.</td></tr>';
+  } else {
+    filtered.forEach(function(d) {
+      // Find matching order to get sender & total
+      var o = state.orders.find(function(x){return x.id===d.id;});
+      var sender = o ? o.sender : '—';
+      var total = o ? fmt(o.total) : '—';
+      var orderDate = o ? o.date : '—';
+
+      html += '<tr>\
+        <td style="font-weight:600;white-space:nowrap">' + bellIcon(d) + '<a onclick="viewOrder(\'' + d.id + '\')" style="font-weight:600">' + d.id + orderSuffix(d) + '</a></td>\
+        <td>' + orderDate + '</td>\
+        <td>' + d.date.replace('April ','Apr ').replace(', 2026','') + '</td>\
+        <td>' + sender + '</td>\
+        <td>' + d.recipient + '</td>\
+        <td class="num">' + total + '</td>\
+        <td class="actions"><a onclick="viewOrder(\'' + d.id + '\')">View</a></td>\
+        <td>' + deliveryStatusDropdown(d) + '</td>\
+      </tr>';
+    });
+  }
+
+  html += '</tbody></table></div>';
   $('#view-deliveries').innerHTML = html;
 }
 
@@ -850,128 +903,139 @@ function renderNewOrder() {
   const isDelivery = f.fulfillment === 'delivery';
   let cartHTML = '';
   let subtotal = 0;
-  state.orderCart.forEach((item, i) => {
+  state.orderCart.forEach(function(item, i) {
     const lineTotal = item.price * item.qty;
     subtotal += lineTotal;
-    cartHTML += `<div class="cart-item">
-      <div class="cart-item-info"><div class="cart-item-title">${item.name}</div></div>
-      <div class="cart-qty">
-        <button onclick="changeQty(${i},-1)">−</button>
-        <span>${item.qty}</span>
-        <button onclick="changeQty(${i},1)">+</button>
-      </div>
-      <div class="cart-item-price">${fmt(lineTotal)}</div>
-      <button class="cart-remove" onclick="removeFromCart(${i})">×</button>
-    </div>`;
+    cartHTML += '<div class="cart-item">\
+      <div class="cart-item-info"><div class="cart-item-title">' + item.name + '</div></div>\
+      <div class="cart-qty">\
+        <button onclick="changeQty(' + i + ',-1)">&minus;</button>\
+        <span>' + item.qty + '</span>\
+        <button onclick="changeQty(' + i + ',1)">+</button>\
+      </div>\
+      <div class="cart-item-price">' + fmt(lineTotal) + '</div>\
+      <button class="cart-remove" onclick="removeFromCart(' + i + ')">&times;</button>\
+    </div>';
   });
 
   const deliveryFee = isDelivery && ZIP_RATES[f.zip] ? ZIP_RATES[f.zip] : 0;
   const total = subtotal + deliveryFee;
+  const pm = f.paymentMethod;
 
-  $('#view-new-order').innerHTML = `
-    <div class="page-header">
-      <div><div class="page-title">New Order</div><div class="page-subtitle">Take a phone or walk-in order</div></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-title">Order Information</div></div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Staff Member</label>
-          <select class="form-select">${STAFF.map(s=>`<option ${s==='Jirni C.'?'selected':''}>${s}</option>`).join('')}</select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Store</label>
-          <select class="form-select"><option ${state.activeStore==='North Manchester'?'selected':''}>North Manchester</option><option ${state.activeStore==='Fort Wayne'?'selected':''}>Fort Wayne</option></select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Order Type</label>
-          <div class="tab-toggle">
-            <button class="tab-toggle-btn ${f.orderType==='phone'?'active':''}" onclick="state.orderForm.orderType='phone';renderNewOrder()">Phone</button>
-            <button class="tab-toggle-btn ${f.orderType==='walkin'?'active':''}" onclick="state.orderForm.orderType='walkin';renderNewOrder()">Walk-in</button>
-          </div>
-        </div>
-      </div>
-    </div>
+  let paymentFieldsHTML = '';
+  if (pm === 'pos') {
+    paymentFieldsHTML = '<div class="banner-info mt-8">A draft order will be created in Shopify. Open it on your POS iPad to collect payment. The order finalizes automatically when paid.</div>';
+  } else if (pm === 'invoice') {
+    paymentFieldsHTML = '<div class="banner-info mt-8">A secure Shopify checkout link will be emailed to the sender. The order is created once the customer completes payment.</div>\
+      <div class="form-hint mt-8">Payment link will be sent to: <strong>sarah.hendricks@gmail.com</strong></div>';
+  } else if (pm === 'cash') {
+    paymentFieldsHTML = '<div class="banner-success mt-8">The order will be created and marked as paid immediately. Record this cash transaction in your register.</div>';
+  } else if (pm === 'cod') {
+    paymentFieldsHTML = '<div class="banner-warning mt-8">The order will be created with payment pending. Your team will collect payment upon delivery or pickup.</div>';
+  } else if (pm === 'house_account') {
+    paymentFieldsHTML = '<div class="form-group mt-8"><label class="form-label">Select Account</label><select class="form-select" style="max-width:300px" id="ha-select">' + state.accounts.map(function(a){return '<option value="' + a.name + '">' + a.name + '</option>';}).join('') + '</select></div>\
+      <div class="form-hint mt-8">Current balance: <strong>' + fmt(state.accounts[0].balance) + '</strong></div>\
+      <div class="banner-info mt-8">The order total will be added to this account\'s running balance. Bill at end of billing period.</div>';
+  }
 
-    <div class="card">
-      <div class="card-header"><div class="card-title">Fulfillment</div></div>
-      <div class="tab-toggle mb-16">
-        <button class="tab-toggle-btn ${isDelivery?'active':''}" onclick="state.orderForm.fulfillment='delivery';renderNewOrder()">Local Delivery</button>
-        <button class="tab-toggle-btn ${!isDelivery?'active':''}" onclick="state.orderForm.fulfillment='pickup';renderNewOrder()">In-Store Pickup</button>
-      </div>
-      ${isDelivery ? `
-        <div class="form-row">
-          <div class="form-group" style="flex:2"><label class="form-label">Recipient Name</label><input class="form-input" placeholder="Full name"></div>
-        </div>
-        <div class="form-group"><label class="form-label">Recipient Address</label><input class="form-input" placeholder="Street address"></div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">City</label><input class="form-input" placeholder="City"></div>
-          <div class="form-group" style="max-width:80px"><label class="form-label">State</label><input class="form-input" value="IN"></div>
-          <div class="form-group" style="max-width:120px">
-            <label class="form-label">ZIP Code</label>
-            <input class="form-input" id="zip-input" placeholder="ZIP" value="${f.zip}" oninput="handleZipChange(this.value)">
-            <div id="zip-feedback"></div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Delivery Date</label><input type="date" class="form-input" value="2026-04-04"><div class="form-hint">Same-day delivery available for orders placed before noon.</div></div>
-          <div class="form-group"><label class="form-label">Delivery Instructions</label><textarea class="form-textarea" placeholder="Gate code, preferred time, leave at door, etc."></textarea></div>
-        </div>
-      ` : `
-        <div class="form-group"><label class="form-label">Pickup Location</label>
-          <div style="display:flex;gap:16px;margin-top:4px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="pickup" checked> North Manchester</label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="pickup"> Fort Wayne</label>
-          </div>
-        </div>
-        <div class="form-group"><label class="form-label">Estimated Pickup Date</label><input type="date" class="form-input" style="max-width:200px" value="2026-04-04"></div>
-      `}
-    </div>
+  var btnLabels = {pos:'Create Draft Order',invoice:'Create & Send Invoice',cash:'Create Order (Paid — Cash)',cod:'Create Order (Pay on Delivery)',house_account:'Create Order (House Account)'};
+  var createBtnLabel = btnLabels[pm] || 'Create Order';
 
-    <div class="card">
-      <div class="card-header"><div class="card-title">Products</div></div>
-      <div class="search-input-wrap mb-16">
-        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>
-        <input class="form-input" id="product-search-input" placeholder="Search products by name..." oninput="searchProducts(this.value)">
-      </div>
-      <div id="product-search-results"></div>
-      <hr class="divider">
-      <div style="font-size:13px;font-weight:600;margin-bottom:8px">Cart${state.orderCart.length?' ('+state.orderCart.length+')':''}</div>
-      ${cartHTML || '<div class="empty-state" style="padding:16px">No products added yet.</div>'}
-      ${state.orderCart.length ? `<div class="cart-subtotal"><div class="cart-subtotal-label">Subtotal</div><div class="cart-subtotal-value">${fmt(subtotal)}</div></div>` : ''}
-    </div>
+  $('#view-new-order').innerHTML = '\
+    <div class="page-header">\
+      <div><div class="page-title">New Order</div><div class="page-subtitle">Take a phone or walk-in order</div></div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Order Information</div></div>\
+      <div class="form-row">\
+        <div class="form-group"><label class="form-label">Staff Member</label><select class="form-select">' + STAFF.map(function(s){return '<option ' + (s==='Jirni C.'?'selected':'') + '>' + s + '</option>';}).join('') + '</select></div>\
+        <div class="form-group"><label class="form-label">Store</label><select class="form-select"><option ' + (state.activeStore==='North Manchester'?'selected':'') + '>North Manchester</option><option ' + (state.activeStore==='Fort Wayne'?'selected':'') + '>Fort Wayne</option></select></div>\
+        <div class="form-group"><label class="form-label">Order Type</label>\
+          <div class="tab-toggle"><button class="tab-toggle-btn ' + (f.orderType==='phone'?'active':'') + '" onclick="state.orderForm.orderType=\'phone\';renderNewOrder()">Phone</button><button class="tab-toggle-btn ' + (f.orderType==='walkin'?'active':'') + '" onclick="state.orderForm.orderType=\'walkin\';renderNewOrder()">Walk-in</button></div>\
+        </div>\
+      </div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Sender Information</div></div>\
+      <div class="form-row">\
+        <div class="form-group" style="flex:2"><label class="form-label">Sender Name</label><input class="form-input" placeholder="Who is placing this order?"></div>\
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" placeholder="(260) 555-0000"></div>\
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" placeholder="email@example.com"></div>\
+      </div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Fulfillment</div></div>\
+      <div class="tab-toggle mb-16">\
+        <button class="tab-toggle-btn ' + (isDelivery?'active':'') + '" onclick="state.orderForm.fulfillment=\'delivery\';renderNewOrder()">Local Delivery</button>\
+        <button class="tab-toggle-btn ' + (!isDelivery?'active':'') + '" onclick="state.orderForm.fulfillment=\'pickup\';renderNewOrder()">In-Store Pickup</button>\
+      </div>' +
+      (isDelivery ? '\
+        <div class="form-row"><div class="form-group" style="flex:2"><label class="form-label">Recipient Name</label><input class="form-input" placeholder="Full name"></div></div>\
+        <div class="form-group"><label class="form-label">Recipient Address</label><input class="form-input" placeholder="Street address"></div>\
+        <div class="form-row">\
+          <div class="form-group"><label class="form-label">City</label><input class="form-input" placeholder="City"></div>\
+          <div class="form-group" style="max-width:80px"><label class="form-label">State</label><input class="form-input" value="IN"></div>\
+          <div class="form-group" style="max-width:120px"><label class="form-label">ZIP Code</label><input class="form-input" id="zip-input" placeholder="ZIP" value="' + f.zip + '" oninput="handleZipChange(this.value)"><div id="zip-feedback"></div></div>\
+        </div>\
+        <div class="form-row">\
+          <div class="form-group"><label class="form-label">Delivery Date</label><input type="date" class="form-input" value="2026-04-04"><div class="form-hint">Same-day delivery available for orders placed before noon.</div></div>\
+          <div class="form-group"><label class="form-label">Delivery Instructions</label><textarea class="form-textarea" placeholder="Gate code, preferred time, leave at door, etc."></textarea></div>\
+        </div>'
+      : '\
+        <div class="form-group"><label class="form-label">Pickup Location</label>\
+          <div style="display:flex;gap:16px;margin-top:4px">\
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="pickup" checked> North Manchester</label>\
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="pickup"> Fort Wayne</label>\
+          </div>\
+        </div>\
+        <div class="form-group"><label class="form-label">Estimated Pickup Date</label><input type="date" class="form-input" style="max-width:200px" value="2026-04-04"></div>') +
+    '</div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Products</div></div>\
+      <div class="search-input-wrap mb-16">\
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>\
+        <input class="form-input" id="product-search-input" placeholder="Search products by name..." oninput="searchProducts(this.value)">\
+      </div>\
+      <div id="product-search-results"></div>\
+      <hr class="divider">\
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px">Cart' + (state.orderCart.length ? ' (' + state.orderCart.length + ')' : '') + '</div>' +
+      (cartHTML || '<div class="empty-state" style="padding:16px">No products added yet.</div>') +
+      (state.orderCart.length ? '<div class="cart-subtotal"><div class="cart-subtotal-label">Subtotal</div><div class="cart-subtotal-value">' + fmt(subtotal) + '</div></div>' : '') +
+    '</div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Card Message</div></div>\
+      <textarea class="form-textarea" id="card-msg" maxlength="250" placeholder="Enter the card message to accompany this arrangement..." oninput="$(\'#char-count\').textContent=this.value.length+\'/250\'"></textarea>\
+      <div class="form-hint" id="char-count">0/250</div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Designer Assignment</div></div>\
+      <div class="form-group"><label class="form-label">Assigned Designer</label><select class="form-select" style="max-width:200px">' + STAFF.map(function(s){return '<option>' + s + '</option>';}).join('') + '</select></div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Payment Method</div></div>\
+      <div class="tab-toggle mb-8">\
+        <button class="tab-toggle-btn ' + (pm==='pos'?'active':'') + '" onclick="state.orderForm.paymentMethod=\'pos\';renderNewOrder()">Pay at POS</button>\
+        <button class="tab-toggle-btn ' + (pm==='invoice'?'active':'') + '" onclick="state.orderForm.paymentMethod=\'invoice\';renderNewOrder()">Send Payment Link</button>\
+        <button class="tab-toggle-btn ' + (pm==='cash'?'active':'') + '" onclick="state.orderForm.paymentMethod=\'cash\';renderNewOrder()">Cash</button>\
+        <button class="tab-toggle-btn ' + (pm==='cod'?'active':'') + '" onclick="state.orderForm.paymentMethod=\'cod\';renderNewOrder()">Pay on Delivery</button>\
+        <button class="tab-toggle-btn ' + (pm==='house_account'?'active':'') + '" onclick="state.orderForm.paymentMethod=\'house_account\';renderNewOrder()">House Account</button>\
+      </div>' + paymentFieldsHTML +
+    '</div>\
+    <div class="card" style="background:#fafafa">\
+      <div class="card-header mb-0"><div class="card-title">Order Summary</div></div>\
+      <div style="margin-top:12px">' +
+        state.orderCart.map(function(item){return '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>' + item.name + ' &times; ' + item.qty + '</span><span>' + fmt(item.price*item.qty) + '</span></div>';}).join('') +
+        (state.orderCart.length ? '\
+          <hr class="divider">\
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:2px 0"><span>Subtotal</span><span>' + fmt(subtotal) + '</span></div>\
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:2px 0"><span>Delivery Fee</span><span>' + (isDelivery && deliveryFee ? fmt(deliveryFee) : '$0.00') + '</span></div>\
+          <hr class="divider">\
+          <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:4px 0"><span>Order Total</span><span>' + fmt(total) + '</span></div>'
+        : '<div class="empty-state" style="padding:16px">Add products to see summary.</div>') +
+      '</div>\
+    </div>\
+    <button class="btn-primary btn-full" style="height:44px;font-size:14px" onclick="createOrder()" id="create-order-btn">' + createBtnLabel + '</button>';
 
-    <div class="card">
-      <div class="card-header"><div class="card-title">Card Message</div></div>
-      <textarea class="form-textarea" id="card-msg" maxlength="250" placeholder="Enter the card message to accompany this arrangement..." oninput="$('#char-count').textContent=this.value.length+'/250'"></textarea>
-      <div class="form-hint" id="char-count">0/250</div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-title">Designer Assignment</div></div>
-      <div class="form-group"><label class="form-label">Assigned Designer</label>
-        <select class="form-select" style="max-width:200px">${STAFF.map(s=>`<option>${s}</option>`).join('')}</select>
-      </div>
-    </div>
-
-    <div class="card" style="background:#fafafa">
-      <div class="card-header mb-0"><div class="card-title">Order Summary</div></div>
-      <div style="margin-top:12px">
-        ${state.orderCart.map(item => `<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>${item.name} × ${item.qty}</span><span>${fmt(item.price*item.qty)}</span></div>`).join('')}
-        ${state.orderCart.length ? `
-          <hr class="divider">
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:2px 0"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:2px 0"><span>Delivery Fee</span><span>${isDelivery && deliveryFee ? fmt(deliveryFee) : '$0.00'}</span></div>
-          <hr class="divider">
-          <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:4px 0"><span>Order Total</span><span>${fmt(total)}</span></div>
-        ` : '<div class="empty-state" style="padding:16px">Add products to see summary.</div>'}
-      </div>
-    </div>
-
-    <button class="btn-primary btn-full" style="height:44px;font-size:14px" onclick="createOrder()" id="create-order-btn">Create Order</button>
-  `;
-
-  // Re-run zip feedback if zip exists
   if (f.zip) handleZipChange(f.zip);
 }
 
@@ -981,27 +1045,23 @@ function handleZipChange(val) {
   if (!el) return;
   if (!val || val.length < 5) { el.innerHTML = ''; return; }
   if (ZIP_RATES[val]) {
-    el.innerHTML = `<div class="form-success">✓ ${val} — Delivery rate: ${fmt(ZIP_RATES[val])}</div>`;
+    el.innerHTML = '<div class="form-success">' + val + ' — Delivery rate: ' + fmt(ZIP_RATES[val]) + '</div>';
   } else {
-    el.innerHTML = `<div class="form-error">✗ ${val} — Outside delivery range. Please choose in-store pickup.</div>`;
+    el.innerHTML = '<div class="form-error">' + val + ' — Outside delivery range. Please choose in-store pickup.</div>';
   }
 }
 
 function searchProducts(q) {
   const el = $('#product-search-results');
   if (!q || q.length < 2) { el.innerHTML = ''; return; }
-  const results = PRODUCTS.filter(p => p.name.toLowerCase().includes(q.toLowerCase()));
+  const results = PRODUCTS.filter(function(p){return p.name.toLowerCase().includes(q.toLowerCase());});
   if (!results.length) { el.innerHTML = '<div class="text-muted" style="padding:8px">No products found.</div>'; return; }
-  el.innerHTML = results.map(p => `<div class="product-row">
-    <div class="product-info"><div class="product-title">${p.name}</div></div>
-    <div class="product-price">${fmt(p.price)}</div>
-    <button class="btn-add" onclick="addToCart('${p.name.replace(/'/g,"\\'")}',${p.price})">Add</button>
-  </div>`).join('');
+  el.innerHTML = results.map(function(p){return '<div class="product-row"><div class="product-info"><div class="product-title">' + p.name + '</div></div><div class="product-price">' + fmt(p.price) + '</div><button class="btn-add" onclick="addToCart(\'' + p.name.replace(/'/g,"\\'") + '\',' + p.price + ')">Add</button></div>';}).join('');
 }
 
 function addToCart(name, price) {
-  const existing = state.orderCart.find(x => x.name === name);
-  if (existing) { existing.qty++; } else { state.orderCart.push({name, price, qty: 1}); }
+  const existing = state.orderCart.find(function(x){return x.name === name;});
+  if (existing) { existing.qty++; } else { state.orderCart.push({name:name, price:price, qty:1}); }
   renderNewOrder();
 }
 
@@ -1018,12 +1078,29 @@ function removeFromCart(i) {
 
 function createOrder() {
   const btn = $('#create-order-btn');
-  btn.innerHTML = '<span class="spinner"></span> Creating Order...';
+  btn.innerHTML = '<span class="spinner"></span> Creating...';
   btn.disabled = true;
-  setTimeout(() => {
-    showToast('Order #1059 created successfully. Payment to be processed via Shopify POS.');
+  const f = state.orderForm;
+  const isDelivery = f.fulfillment === 'delivery';
+  let subtotal = 0;
+  state.orderCart.forEach(function(item){subtotal += item.price * item.qty;});
+  const deliveryFee = isDelivery && ZIP_RATES[f.zip] ? ZIP_RATES[f.zip] : 0;
+  const total = subtotal + deliveryFee;
+  const pm = f.paymentMethod;
+  var haName = '';
+  var haSelect = $('#ha-select');
+  if (haSelect) haName = haSelect.value;
+  const msgs = {
+    pos: 'Draft Order #D-1059 created successfully. Open it on your Shopify POS iPad to collect payment of ' + fmt(total) + '.',
+    invoice: 'Order #1059 created. Payment link sent to sarah.hendricks@gmail.com.',
+    cash: 'Order #1059 created and marked as paid. Cash payment of ' + fmt(total) + ' recorded.',
+    cod: 'Order #1059 created. Payment of ' + fmt(total) + ' due on delivery.',
+    house_account: 'Order #1059 created. ' + fmt(total) + ' added to ' + (haName || 'account') + '\'s balance.'
+  };
+  setTimeout(function(){
+    showToast(msgs[pm] || msgs.pos);
     state.orderCart = [];
-    state.orderForm = {fulfillment:'delivery',orderType:'phone',zip:''};
+    state.orderForm = {fulfillment:'delivery',orderType:'phone',zip:'',paymentMethod:'pos'};
     renderNewOrder();
   }, 1500);
 }
@@ -1032,58 +1109,78 @@ function createOrder() {
    B3: ORDERS LIST
    ═══════════════════════════════════════════════════════════════ */
 function renderOrders() {
-  let html = `
-    <div class="page-header">
-      <div><div class="page-title">Orders</div><div class="page-subtitle">All floral orders across both locations</div></div>
-      <button class="btn-primary" onclick="switchView('new-order')">+ New Order</button>
-    </div>
-    <div class="card">
-      <div class="filter-bar mb-16">
-        <div class="search-input-wrap" style="flex:1;max-width:280px">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>
-          <input class="form-input" id="order-search" placeholder="Search by order #, customer, or recipient..." oninput="filterOrders()">
-        </div>
-        <select class="form-select" id="order-store-filter" onchange="filterOrders()"><option value="all">All Stores</option><option>North Manchester</option><option>Fort Wayne</option></select>
-        <select class="form-select" id="order-status-filter" onchange="filterOrders()"><option value="all">All Statuses</option><option>Pending</option><option>Ready</option><option>Taken</option><option>Delivered</option></select>
-        <select class="form-select" id="order-type-filter" onchange="filterOrders()"><option value="all">All Types</option><option>Online</option><option>Phone</option><option>Walk-in</option></select>
-      </div>
-      <table class="data-grid">
-        <thead><tr><th>Order #</th><th>Date</th><th>Customer</th><th>Recipient</th><th>Type</th><th>Fulfillment</th><th>Status</th><th class="num">Total</th></tr></thead>
-        <tbody id="orders-tbody"></tbody>
-      </table>
-    </div>`;
+  const df = state.orderDateFilter;
+  var html = '\
+    <div class="page-header">\
+      <div><div class="page-title">Orders</div><div class="page-subtitle">All floral orders across both locations</div></div>\
+      <button class="btn-primary" onclick="switchView(\'new-order\')">+ New Order</button>\
+    </div>\
+    <div class="card">\
+      <div class="filter-bar mb-16">\
+        <div class="search-input-wrap" style="flex:1;max-width:280px">\
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>\
+          <input class="form-input" id="order-search" placeholder="Search by order #, customer..." oninput="filterOrders()">\
+        </div>\
+        <select class="form-select" id="order-store-filter" onchange="filterOrders()"><option value="all">All Stores</option><option>North Manchester</option><option>Fort Wayne</option></select>\
+        <select class="form-select" id="order-status-filter" onchange="filterOrders()"><option value="all">All Statuses</option><option>Pending</option><option>Ready</option><option>Taken</option><option>Delivered</option></select>\
+        <select class="form-select" id="order-type-filter" onchange="filterOrders()"><option value="all">All Types</option><option>Online</option><option>Phone</option><option>Walk-in</option></select>\
+        <div class="tab-toggle" style="margin-bottom:0">\
+          <button class="tab-toggle-btn ' + (df==='all'?'active':'') + '" onclick="state.orderDateFilter=\'all\';renderOrders()">All</button>\
+          <button class="tab-toggle-btn ' + (df==='today'?'active':'') + '" onclick="state.orderDateFilter=\'today\';renderOrders()">Today</button>\
+          <button class="tab-toggle-btn ' + (df==='week'?'active':'') + '" onclick="state.orderDateFilter=\'week\';renderOrders()">This Week</button>\
+        </div>\
+      </div>\
+      <div id="orders-count" style="font-size:12px;color:#919191;margin-bottom:8px"></div>\
+      <table class="data-grid">\
+        <thead><tr><th>Order #</th><th>Date</th><th>Sender</th><th>Recipient</th><th>Type</th><th>Status</th><th class="num">Total</th><th class="actions"></th></tr></thead>\
+        <tbody id="orders-tbody"></tbody>\
+      </table>\
+    </div>';
   $('#view-orders').innerHTML = html;
   filterOrders();
 }
 
 function filterOrders() {
-  const q = ($('#order-search')?.value || '').toLowerCase();
-  const statusF = $('#order-status-filter')?.value || 'all';
-  const typeF = $('#order-type-filter')?.value || 'all';
-  let data = state.orders.filter(o => {
+  const q = ($('#order-search') ? $('#order-search').value : '').toLowerCase();
+  const storeF = $('#order-store-filter') ? $('#order-store-filter').value : 'all';
+  const statusF = $('#order-status-filter') ? $('#order-status-filter').value : 'all';
+  const typeF = $('#order-type-filter') ? $('#order-type-filter').value : 'all';
+  const df = state.orderDateFilter;
+
+  var data = state.orders.filter(function(o) {
     if (q && !o.id.includes(q) && !o.sender.toLowerCase().includes(q) && !o.recipient.toLowerCase().includes(q)) return false;
+    if (storeF !== 'all' && o.store !== storeF) return false;
     if (statusF !== 'all' && o.status !== statusF) return false;
     if (typeF !== 'all' && o.type !== typeF) return false;
+    if (df === 'today' && o.date !== 'Apr 3') return false;
+    if (df === 'week' && !['Apr 2','Apr 3','Apr 4'].includes(o.date)) return false;
     return true;
   });
 
-  const statusMap = {Pending:'badge-gray',Ready:'badge-blue',Taken:'badge-yellow',Delivered:'badge-green'};
-  let rows = '';
-  data.forEach(o => {
-    rows += `<tr class="clickable" onclick="viewOrder('${o.id}')">
-      <td style="font-weight:600">#${o.id}</td>
-      <td>${o.date}</td>
-      <td>${o.sender}</td>
-      <td>${o.recipient}</td>
-      <td>${o.alert?'<span class="notif-dot"></span>':''}${o.type}</td>
-      <td>${o.fulfillment}</td>
-      <td><span class="badge ${statusMap[o.status]}">${o.status}</span></td>
-      <td class="num">${fmt(o.total)}</td>
-    </tr>`;
+  const statusDotMap = {Pending:'status-dot-pending',Ready:'status-dot-ready',Taken:'status-dot-taken',Delivered:'status-dot-delivered'};
+  const statusBadgeMap = {Pending:'badge-gray',Ready:'badge-blue',Taken:'badge-yellow',Delivered:'badge-green'};
+  const typeBadgeMap = {Online:'badge-blue',Phone:'badge-gray','Walk-in':'badge-yellow'};
+
+  var rows = '';
+  data.forEach(function(o) {
+    const suffix = o.type==='Online' ? '-Web' : o.fulfillment==='Pickup' ? '-PU' : '';
+    const dot = '';
+    rows += '<tr>\
+      <td style="font-weight:600;white-space:nowrap">' + dot + '<a onclick="viewOrder(\'' + o.id + '\')" style="font-weight:600">#' + o.id + suffix + '</a></td>\
+      <td>' + o.date + '</td>\
+      <td>' + o.sender + '</td>\
+      <td>' + o.recipient + '</td>\
+      <td><span class="badge ' + typeBadgeMap[o.type] + '" style="font-size:10px;text-transform:none">' + o.type + '</span></td>\
+      <td style="white-space:nowrap"><span class="status-dot ' + statusDotMap[o.status] + '"></span><span class="badge ' + statusBadgeMap[o.status] + '">' + o.status + '</span></td>\
+      <td class="num">' + fmt(o.total) + '</td>\
+      <td class="actions"><a onclick="viewOrder(\'' + o.id + '\')">View</a></td>\
+    </tr>';
   });
   if (!data.length) rows = '<tr><td colspan="8" class="empty-state">No orders found.</td></tr>';
-  const tbody = $('#orders-tbody');
+  var tbody = $('#orders-tbody');
   if (tbody) tbody.innerHTML = rows;
+  var countEl = $('#orders-count');
+  if (countEl) countEl.textContent = 'Showing ' + data.length + ' order' + (data.length !== 1 ? 's' : '');
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1097,111 +1194,244 @@ function viewOrder(id) {
 
 function renderOrderDetail() {
   const id = state.selectedOrderId || '1047';
-  // Use order 1047 as default rich example
-  const isEditing = state.orderDetailEditing || false;
-  const statusMap = {Pending:'badge-gray',Ready:'badge-blue',Taken:'badge-yellow',Delivered:'badge-green'};
-  const o = state.orders.find(x=>x.id===id) || state.orders[state.orders.length-1];
+  const o = state.orders.find(function(x){return x.id===id;}) || state.orders[state.orders.length-1];
+  const statusBadgeMap = {Pending:'badge-gray',Ready:'badge-blue',Taken:'badge-yellow',Delivered:'badge-green'};
+  const typeBadgeMap = {Online:'badge-blue',Phone:'badge-gray','Walk-in':'badge-yellow'};
+  const statusOptions = [{val:'Pending',label:'Order Received'},{val:'Ready',label:'Ready for Delivery'},{val:'Taken',label:'Out for Delivery'},{val:'Delivered',label:'Taken/Delivered'}];
+  const payBadge = o.paymentStatus === 'Paid' ? 'badge-green' : o.paymentStatus === 'COD' ? 'badge-yellow' : 'badge-gray';
+  const payLabel = o.paymentMethod === 'Stripe' ? 'Paid via Stripe — Visa ending 4242' : o.paymentMethod === 'Shopify POS' ? 'Paid via External Processor (Shopify POS) — Conf #SPO-48291' : o.paymentMethod === 'House Account' ? 'Charged to House Account — ' + o.sender : o.paymentMethod === 'Cash' ? 'Paid — Cash' : o.paymentMethod === 'COD' ? 'Cash on Delivery — Payment Pending' : o.paymentMethod;
+  const showApplyPayment = o.paymentStatus === 'COD' || o.paymentStatus === 'Pending';
+  const productsSubtotal = o.products.reduce(function(s,p){return s + p.qty * p.price;}, 0);
 
-  const html = `
-    <a class="back-link" onclick="switchView('orders')">← Back to Orders</a>
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:20px;font-weight:700">#${o.id}</span>
-          <span class="badge ${statusMap[o.status]}">${o.status}</span>
-          <span class="badge badge-gray" style="text-transform:none">${o.type}</span>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn-secondary btn-sm" onclick="showToast('Print dialog would open','info')">🖨 Print Order</button>
-        </div>
-      </div>
-      <div class="text-muted mt-8">${o.date}, 2026</div>
-    </div>
+  // Products table
+  var prodRows = o.products.map(function(p){
+    var lineSub = p.qty * p.price;
+    var lineTax = p.price >= 20 ? Math.round(lineSub * 0.07 * 100) / 100 : 0;
+    return '<tr><td>' + p.name + '</td><td class="num">' + p.qty + '</td><td class="num">' + fmt(p.price) + '</td><td class="num">' + fmt(lineSub) + '</td><td class="num">' + fmt(lineTax) + '</td><td class="num">' + fmt(lineSub + lineTax) + '</td></tr>';
+  }).join('');
 
-    <div class="two-col">
-      <div class="card">
-        <div class="card-header mb-0"><div class="card-title">Sender Information</div></div>
-        <div class="detail-grid mt-12">
-          <div class="detail-label">Name</div><div class="detail-value">${o.sender}</div>
-          <div class="detail-label">Email</div><div class="detail-value">${o.sender.toLowerCase().replace(/ /g,'.')}@gmail.com</div>
-          <div class="detail-label">Phone</div><div class="detail-value">(260) 555-0147</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header mb-0"><div class="card-title">Recipient Information</div></div>
-        <div class="detail-grid mt-12">
-          <div class="detail-label">Name</div><div class="detail-value">${o.recipient}</div>
-          <div class="detail-label">Address</div><div class="detail-value">1425 Oak Street, North Manchester, IN 46962</div>
-        </div>
-      </div>
-    </div>
+  // Timeline
+  var timelineHTML = '';
+  var sortedNotes = (o.notes || []).slice().reverse();
+  sortedNotes.forEach(function(n) {
+    var typeClass = 'type-' + n.type;
+    var typeBadgeCls = n.type === 'email' ? 'badge-green' : n.type === 'status' ? 'badge-blue' : n.type === 'payment' ? 'badge-blue' : 'badge-gray';
+    var typeLabel = n.type === 'store' ? 'Store Note' : n.type === 'email' ? 'Customer Notified via Email' : n.type === 'status' ? 'Status Change' : n.type === 'payment' ? 'Payment' : 'System';
+    timelineHTML += '<div class="timeline-item"><div class="timeline-date">' + n.date + '</div><div><span class="badge ' + typeBadgeCls + '" style="font-size:10px">' + typeLabel + '</span></div><div class="timeline-msg">' + n.message + '</div></div>';
+  });
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">Fulfillment Details</div>
-        <button class="btn-secondary btn-sm" onclick="showToast('Edit mode toggled','info')">Edit</button>
-      </div>
-      <div class="detail-grid">
-        <div class="detail-label">Type</div><div class="detail-value">Local Delivery</div>
-        <div class="detail-label">Delivery Date</div><div class="detail-value">April 3, 2026</div>
-        <div class="detail-label">Delivery Fee</div><div class="detail-value">$12.99</div>
-        <div class="detail-label">Instructions</div><div class="detail-value">Please leave at the front door if no one answers</div>
-        <div class="detail-label">Designer</div><div class="detail-value">Josi C.</div>
-        <div class="detail-label">Card Message</div><div class="detail-value" style="font-style:italic">"Happy Birthday Mom! Love, Sarah"</div>
-      </div>
-    </div>
+  var html = '\
+    <a class="back-link" onclick="switchView(\'orders\')">&#8592; Back to Orders</a>\
+    <div class="card">\
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">\
+        <div>\
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">\
+            <span style="font-size:20px;font-weight:700">#' + o.id + '</span>\
+            <span class="badge ' + statusBadgeMap[o.status] + '">' + o.status + '</span>\
+            <span class="badge ' + typeBadgeMap[o.type] + '" style="text-transform:none">' + o.type + '</span>\
+          </div>\
+          <div class="text-muted mt-8">' + o.sender + ' &#8594; ' + o.recipient + ' &mdash; ' + o.date + ', 2026 &mdash; ' + o.fulfillment + '</div>\
+        </div>\
+        <div style="display:flex;gap:8px;flex-wrap:wrap">\
+          <button class="btn-secondary btn-sm" onclick="showToast(\'Order duplicated as draft #1060\',\'info\')">Duplicate</button>\
+          <button class="btn-secondary btn-sm" onclick="showToast(\'Email receipt sent to ' + (o.senderEmail || 'customer') + '\',\'info\')">Email Receipt</button>\
+          <button class="btn-primary btn-sm" onclick="showToast(\'Print dialog would open\',\'info\')">Print</button>\
+        </div>\
+      </div>\
+    </div>\
+    <div class="two-col">\
+      <div class="card">\
+        <div class="card-header mb-0"><div class="card-title">Sender Information</div></div>\
+        <div class="detail-grid mt-12">\
+          <div class="detail-label">Name</div><div class="detail-value">' + o.sender + '</div>\
+          <div class="detail-label">Phone</div><div class="detail-value">' + (o.senderPhone || '—') + '</div>\
+          <div class="detail-label">Email</div><div class="detail-value">' + (o.senderEmail || '—') + '</div>\
+        </div>\
+      </div>\
+      <div class="card">\
+        <div class="card-header mb-0"><div class="card-title">Recipient Information</div></div>\
+        <div class="detail-grid mt-12">\
+          <div class="detail-label">Name</div><div class="detail-value">' + o.recipient + '</div>\
+          <div class="detail-label">Address</div><div class="detail-value">' + (o.recipientAddress || '—') + '</div>\
+        </div>\
+      </div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Order &amp; Store Details</div></div>\
+      <div class="two-col">\
+        <div>\
+          <div class="detail-grid">\
+            <div class="detail-label">Delivery Date</div><div class="detail-value">' + o.deliveryDate + ', 2026</div>\
+            <div class="detail-label">Instructions</div><div class="detail-value">' + (o.deliveryInstructions || '—') + '</div>\
+            <div class="detail-label">Card Message</div><div class="detail-value" style="font-style:italic">' + (o.cardMessage ? '"' + o.cardMessage + '"' : '—') + '</div>\
+            <div class="detail-label">Order Status</div><div class="detail-value">\
+              <select class="form-select" style="max-width:200px;height:32px" onchange="updateOrderStatus(\'' + o.id + '\',this.value)">' +
+                statusOptions.map(function(s){return '<option value="' + s.val + '" ' + (s.val===o.status?'selected':'') + '>' + s.label + '</option>';}).join('') +
+              '</select>\
+            </div>' +
+            (showApplyPayment ? '<div class="detail-label">Payment</div><div class="detail-value"><button class="btn-primary btn-sm" onclick="openPaymentModal(\'' + o.id + '\')">Apply Payment</button></div>' : '') +
+          '</div>\
+        </div>\
+        <div>\
+          <div class="detail-grid">\
+            <div class="detail-label">Store</div><div class="detail-value"><select class="form-select" style="max-width:200px;height:32px"><option ' + (o.store==='North Manchester'?'selected':'') + '>North Manchester</option><option ' + (o.store==='Fort Wayne'?'selected':'') + '>Fort Wayne</option></select></div>\
+            <div class="detail-label">Ticket Printed</div><div class="detail-value"><select class="form-select" style="max-width:100px;height:32px"><option ' + (o.ticketPrinted?'selected':'') + '>Yes</option><option ' + (!o.ticketPrinted?'selected':'') + '>No</option></select></div>\
+            <div class="detail-label">Printed On</div><div class="detail-value">' + (o.printedOn || '—') + '</div>\
+            <div class="detail-label">Order Type</div><div class="detail-value">' + o.type + '</div>\
+            <div class="detail-label">Employee</div><div class="detail-value">' + (o.employee || '—') + '</div>\
+            <div class="detail-label">Designer</div><div class="detail-value">\
+              <select class="form-select" style="max-width:160px;height:32px"><option value="">Choose Designer...</option>' +
+                STAFF.map(function(s){return '<option ' + (s===o.designer?'selected':'') + '>' + s + '</option>';}).join('') +
+              '</select>\
+            </div>\
+          </div>\
+        </div>\
+      </div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Products</div><button class="btn-secondary btn-sm" onclick="showToast(\'Product search would open\',\'info\')">+ Add Product</button></div>\
+      <table class="data-grid">\
+        <thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Subtotal</th><th class="num">Tax</th><th class="num">Row Total</th></tr></thead>\
+        <tbody>' + prodRows + '</tbody>\
+      </table>\
+    </div>\
+    <div class="card">\
+      <div class="card-header mb-0"><div class="card-title">Payment</div></div>\
+      <div class="detail-grid mt-12">\
+        <div class="detail-label">Method</div><div class="detail-value">' + payLabel + '</div>\
+        <div class="detail-label">Status</div><div class="detail-value"><span class="badge ' + payBadge + '">' + o.paymentStatus + '</span>' + (showApplyPayment ? ' <button class="btn-primary btn-sm" style="margin-left:8px" onclick="openPaymentModal(\'' + o.id + '\')">Apply Payment</button>' : '') + '</div>\
+      </div>\
+    </div>\
+    <div class="two-col">\
+      <div class="card">\
+        <div class="card-header mb-0"><div class="card-title">Order Notes</div></div>\
+        <textarea class="form-textarea mt-8" id="order-note-input" placeholder="Add a note about this order..."></textarea>\
+        <div style="display:flex;align-items:center;gap:16px;margin-top:8px">\
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="radio" name="note-type" value="store" checked> Store Note</label>\
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="radio" name="note-type" value="email"> Email Note to Customer</label>\
+        </div>\
+        <button class="btn-secondary btn-sm mt-8" onclick="addOrderNote(\'' + o.id + '\')">Submit Note</button>\
+      </div>\
+      <div class="card" style="background:#fafafa">\
+        <div class="card-header mb-0"><div class="card-title">Order Totals</div></div>\
+        <div style="margin-top:12px">\
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>Subtotal</span><span>' + fmt(o.subtotal) + '</span></div>\
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>Delivery Fee</span><span>' + fmt(o.deliveryFee) + '</span></div>' +
+          (o.tax > 0 ? '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>Tax</span><span>' + fmt(o.tax) + '</span></div>' : '') +
+          '<hr class="divider">\
+          <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:4px 0"><span>Grand Total</span><span>' + fmt(o.total) + '</span></div>\
+        </div>\
+      </div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header mb-0"><div class="card-title">Activity Timeline</div></div>\
+      <div class="timeline">' + (timelineHTML || '<div class="empty-state">No activity recorded.</div>') + '</div>\
+    </div>\
+    <div style="margin-top:8px"><a style="font-size:12px;color:#005bd3" onclick="showToast(\'Standing order creation form would open\',\'info\')">+ Create New Standing Order from this order</a></div>';
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">Products</div>
-        <button class="btn-secondary btn-sm" onclick="showToast('Product search would open','info')">+ Add Product</button>
-      </div>
-      <table class="data-grid">
-        <thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Line Total</th><th></th></tr></thead>
-        <tbody>
-          <tr><td>Blooming Bliss Bouquet</td><td class="num">1</td><td class="num">$64.99</td><td class="num">$64.99</td><td class="actions"><button class="cart-remove" onclick="showToast('Product removed','info')">×</button></td></tr>
-          <tr><td>Plush Bear</td><td class="num">1</td><td class="num">$12.99</td><td class="num">$12.99</td><td class="actions"><button class="cart-remove" onclick="showToast('Product removed','info')">×</button></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <div class="card-header mb-0"><div class="card-title">Payment</div></div>
-      <div class="detail-grid mt-12">
-        <div class="detail-label">Method</div><div class="detail-value">${o.type==='Online'?'Paid via Stripe — Visa ending 4242':'Paid via Shopify POS — Conf #SPO-48291'}</div>
-        <div class="detail-label">Status</div><div class="detail-value"><span class="badge badge-green">Paid</span></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header mb-0"><div class="card-title">Status Controls</div></div>
-      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-        <button class="btn-primary btn-sm" ${o.status!=='Pending'?'disabled':''} onclick="updateOrderStatus('${o.id}','Ready')">Mark as Ready for Delivery</button>
-        <button class="btn-primary btn-sm" ${o.status!=='Ready'?'disabled':''} onclick="updateOrderStatus('${o.id}','Taken')">Mark as Taken</button>
-        <button class="btn-success btn-sm" ${o.status!=='Taken'?'disabled':''} onclick="updateOrderStatus('${o.id}','Delivered')">Mark as Delivered</button>
-      </div>
-      <div class="form-hint mt-8">Sender will be notified when status changes.</div>
-    </div>
-
-    <div class="card">
-      <div class="card-header mb-0"><div class="card-title">Order Notes</div></div>
-      <textarea class="form-textarea mt-8" placeholder="Add internal notes about this order..."></textarea>
-      <button class="btn-secondary btn-sm mt-8" onclick="showToast('Notes saved')">Save Notes</button>
-    </div>
-
-    <div class="card" style="background:#fafafa">
-      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>Subtotal</span><span>${fmt(o.total - 12.99)}</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>Delivery Fee</span><span>$12.99</span></div>
-      <hr class="divider">
-      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:4px 0"><span>Total</span><span>${fmt(o.total)}</span></div>
-    </div>
-  `;
   $('#view-order-detail').innerHTML = html;
 }
 
 function updateOrderStatus(id, newStatus) {
-  const o = state.orders.find(x=>x.id===id);
-  if (o) { o.status = newStatus; showToast(`Order #${id} marked as ${newStatus}. Sender notification sent.`); renderOrderDetail(); }
+  const o = state.orders.find(function(x){return x.id===id;});
+  if (o) {
+    o.status = newStatus;
+    o.notes.push({date:'Apr 3, 2026 ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}), type:'status', message:'Order marked as ' + newStatus});
+    showToast('Order #' + id + ' marked as ' + newStatus + '. Sender notified.');
+    renderOrderDetail();
+  }
+}
+
+function addOrderNote(id) {
+  const o = state.orders.find(function(x){return x.id===id;});
+  const input = $('#order-note-input');
+  if (!o || !input || !input.value.trim()) { showToast('Please enter a note.','error'); return; }
+  const noteType = document.querySelector('input[name="note-type"]:checked');
+  const type = noteType && noteType.value === 'email' ? 'email' : 'store';
+  o.notes.push({date:'Apr 3, 2026 ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}), type:type, message:input.value.trim()});
+  showToast(type === 'email' ? 'Note emailed to customer.' : 'Store note added.');
+  renderOrderDetail();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAYMENT MODAL
+   ═══════════════════════════════════════════════════════════════ */
+function openPaymentModal(id) {
+  state.paymentModalOrderId = id;
+  const o = state.orders.find(function(x){return x.id===id;});
+  if (!o) return;
+  $('#payment-modal').style.display = 'flex';
+  updatePaymentModalBody(o, 'pos');
+}
+
+function closePaymentModal() {
+  $('#payment-modal').style.display = 'none';
+  state.paymentModalOrderId = null;
+}
+
+function updatePaymentModalBody(o, method) {
+  var fieldsHTML = '';
+  if (method === 'pos') {
+    fieldsHTML = '<div class="banner-info mt-12">Process payment on your Shopify POS iPad. The draft order will finalize automatically.</div>';
+  } else if (method === 'card') {
+    fieldsHTML = '<div class="banner-info mt-12">Customer card will be charged via Shopify Payments.</div>\
+      <div class="form-row mt-12"><div class="form-group"><label class="form-label">Name on Card</label><input class="form-input" placeholder="Cardholder name"></div></div>\
+      <div class="form-row"><div class="form-group" style="flex:2"><label class="form-label">Card Number</label><input class="form-input" placeholder="4242 4242 4242 4242"></div>\
+      <div class="form-group"><label class="form-label">Exp</label><input class="form-input" placeholder="MM/YY"></div>\
+      <div class="form-group" style="max-width:80px"><label class="form-label">CVV</label><input class="form-input" placeholder="123"></div></div>';
+  } else if (method === 'cash') {
+    fieldsHTML = '<div class="form-hint mt-12">Record cash payment received.</div>';
+  } else if (method === 'check') {
+    fieldsHTML = '<div class="form-hint mt-12">Record check or money order payment.</div>';
+  } else if (method === 'ha') {
+    fieldsHTML = '<div class="form-group mt-12"><label class="form-label">Select Account</label><select class="form-select" style="max-width:300px">' + state.accounts.map(function(a){return '<option>' + a.name + '</option>';}).join('') + '</select></div>\
+      <div class="form-hint mt-8">Charge will be added to the account\'s running balance.</div>';
+  }
+
+  $('#payment-modal-body').innerHTML = '\
+    <div style="display:flex;gap:24px;margin-bottom:16px">\
+      <div><span class="text-muted">Order Amount:</span> <strong>' + fmt(o.total) + '</strong></div>\
+      <div><span class="text-muted">Amount Remaining:</span> <strong>' + fmt(o.total) + '</strong></div>\
+    </div>\
+    <div class="form-group"><label class="form-label">Payment Method</label>\
+      <select class="form-select" id="modal-payment-method" onchange="updatePaymentFields()">\
+        <option value="pos" ' + (method==='pos'?'selected':'') + '>External Processor (Shopify POS)</option>\
+        <option value="cash" ' + (method==='cash'?'selected':'') + '>Cash</option>\
+        <option value="check" ' + (method==='check'?'selected':'') + '>Check / Money Order</option>\
+        <option value="card" ' + (method==='card'?'selected':'') + '>Credit Card</option>\
+        <option value="ha" ' + (method==='ha'?'selected':'') + '>House Account</option>\
+      </select>\
+    </div>\
+    <div class="form-group"><label class="form-label">Payment Amount *</label><input class="form-input" style="max-width:160px" value="' + o.total.toFixed(2) + '"></div>' +
+    fieldsHTML +
+    '<div class="modal-footer">\
+      <div style="display:flex;gap:8px">\
+        <button class="btn-secondary btn-sm" onclick="showToast(\'Receipt printed\',\'info\')">Print Receipt</button>\
+        <button class="btn-secondary btn-sm" onclick="showToast(\'Ticket printed\',\'info\')">Print Ticket</button>\
+      </div>\
+      <button class="btn-primary" onclick="completePayment()">Complete Order</button>\
+    </div>';
+}
+
+function updatePaymentFields() {
+  const method = $('#modal-payment-method').value;
+  const id = state.paymentModalOrderId;
+  const o = state.orders.find(function(x){return x.id===id;});
+  if (o) updatePaymentModalBody(o, method);
+}
+
+function completePayment() {
+  const id = state.paymentModalOrderId;
+  const o = state.orders.find(function(x){return x.id===id;});
+  if (!o) return;
+  const method = $('#modal-payment-method') ? $('#modal-payment-method').value : 'pos';
+  const methodLabels = {pos:'Shopify POS',card:'Credit Card',cash:'Cash',check:'Check / Money Order',ha:'House Account'};
+  o.paymentStatus = 'Paid';
+  o.paymentMethod = method === 'pos' ? 'Shopify POS' : method === 'card' ? 'Credit Card' : method === 'cash' ? 'Cash' : method === 'check' ? 'Check' : 'House Account';
+  o.notes.push({date:'Apr 3, 2026 ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}), type:'payment', message:'Payment of ' + fmt(o.total) + ' recorded via ' + (methodLabels[method] || method)});
+  closePaymentModal();
+  showToast('Payment of ' + fmt(o.total) + ' recorded successfully via ' + (methodLabels[method] || method) + '.');
+  renderOrderDetail();
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1210,39 +1440,47 @@ function updateOrderStatus(id, newStatus) {
 function renderProposals() {
   const statusMap = {Confirmed:'badge-green',Sent:'badge-blue',Draft:'badge-gray',Complete:'badge-green',Archived:'badge-gray'};
   const counts = {};
-  ['All','Draft','Sent','Confirmed','Complete','Archived'].forEach(s => {
-    counts[s] = s==='All' ? state.proposals.length : state.proposals.filter(p=>p.status===s).length;
+  ['All','Draft','Sent','Confirmed','Complete','Archived'].forEach(function(s){
+    counts[s] = s==='All' ? state.proposals.length : state.proposals.filter(function(p){return p.status===s;}).length;
   });
   const f = state.proposalFilter || 'All';
-  const filtered = f==='All' ? state.proposals : state.proposals.filter(p=>p.status===f);
+  const filtered = f==='All' ? state.proposals : state.proposals.filter(function(p){return p.status===f;});
+  const colorMap = {All:'dark',Draft:'',Sent:'blue',Confirmed:'green',Complete:'green',Archived:''};
 
-  let html = `
-    <div class="page-header">
-      <div><div class="page-title">Wedding & Event Proposals</div><div class="page-subtitle">Custom quotes for weddings, events, and special occasions</div></div>
-      <button class="btn-primary" onclick="state.selectedProposalIdx=null;renderProposalEditor();switchView('proposal-editor')">+ Create New Proposal</button>
-    </div>
-    <div class="tab-toggle mb-16">
-      ${['All','Draft','Sent','Confirmed','Complete','Archived'].map(s => `<button class="tab-toggle-btn ${f===s?'active':''}" onclick="state.proposalFilter='${s}';renderProposals()">${s} <span class="tab-count">(${counts[s]})</span></button>`).join('')}
-    </div>
-    <div class="card">
-      <table class="data-grid">
-        <thead><tr><th>Client</th><th>Event Date</th><th>Type</th><th>Venue</th><th>Status</th><th class="num">Total</th><th class="actions">Actions</th></tr></thead>
-        <tbody>
-          ${filtered.map((p, i) => {
-            const realIdx = state.proposals.indexOf(p);
-            return `<tr>
-              <td style="font-weight:600">${p.client}</td>
-              <td>${p.eventDate}</td>
-              <td>${p.eventType}</td>
-              <td>${p.venue}</td>
-              <td><span class="badge ${statusMap[p.status]}">${p.status}</span></td>
-              <td class="num">${fmt(p.total)}</td>
-              <td class="actions"><a onclick="state.selectedProposalIdx=${realIdx};renderProposalEditor();switchView('proposal-editor')">View</a></td>
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>`;
+  var html = '\
+    <div class="page-header">\
+      <div><div class="page-title">Wedding &amp; Event Proposals</div><div class="page-subtitle">Custom quotes for weddings, events, and special occasions</div></div>\
+      <button class="btn-primary" onclick="state.selectedProposalIdx=null;renderProposalEditor();switchView(\'proposal-editor\')">+ Create New Proposal</button>\
+    </div>\
+    <div class="summary-row">' +
+      ['All','Draft','Sent','Confirmed','Complete','Archived'].map(function(s){
+        return '<div class="summary-card ' + (colorMap[s] || '') + '" onclick="state.proposalFilter=\'' + s + '\';renderProposals()"><div class="summary-card-label">' + (s==='All'?'All Proposals':s) + '</div><div class="summary-card-value">' + counts[s] + '</div></div>';
+      }).join('') +
+    '</div>\
+    <div class="tab-toggle mb-16">' +
+      ['All','Draft','Sent','Confirmed','Complete','Archived'].map(function(s){
+        return '<button class="tab-toggle-btn ' + (f===s?'active':'') + '" onclick="state.proposalFilter=\'' + s + '\';renderProposals()">' + s + ' <span class="tab-count">(' + counts[s] + ')</span></button>';
+      }).join('') +
+    '</div>\
+    <div class="card">\
+      <table class="data-grid">\
+        <thead><tr><th>Client</th><th>Event Date</th><th>Type</th><th>Venue</th><th>Status</th><th class="num">Total</th><th class="actions">Actions</th></tr></thead>\
+        <tbody>' +
+          filtered.map(function(p){
+            var realIdx = state.proposals.indexOf(p);
+            return '<tr>\
+              <td style="font-weight:600">' + p.client + '</td>\
+              <td>' + p.eventDate + '</td>\
+              <td>' + p.eventType + '</td>\
+              <td>' + p.venue + '</td>\
+              <td><span class="badge ' + statusMap[p.status] + '">' + p.status + '</span></td>\
+              <td class="num">' + fmt(p.total) + '</td>\
+              <td class="actions"><a onclick="state.selectedProposalIdx=' + realIdx + ';renderProposalEditor();switchView(\'proposal-editor\')">View</a></td>\
+            </tr>';
+          }).join('') +
+        '</tbody>\
+      </table>\
+    </div>';
   $('#view-proposals').innerHTML = html;
 }
 
@@ -1252,159 +1490,108 @@ function renderProposals() {
 function renderProposalEditor() {
   const isNew = state.selectedProposalIdx === null;
   const p = isNew ? {client:'',eventDate:'',eventType:'Wedding',venue:'',status:'Draft',total:0,email:''} : state.proposals[state.selectedProposalIdx];
-  const isConfirmed = p.status === 'Confirmed';
-  const isCripe = p.client.includes('Cripe');
 
-  // Categories with items
   const categories = [
-    {name:'Bridal Flowers',expanded:true,items:[
-      {item:'Bridal Bouquet',desc:'Garden-style with white roses, eucalyptus, and peonies',price:285},
-      {item:'Headpiece',desc:'Floral crown with baby\'s breath and greenery',price:65},
-      {item:'Toss Bouquet',desc:'Miniature version of bridal bouquet',price:45}
-    ],subtotal:395},
-    {name:'Bridal Party',expanded:false,items:[
-      {item:'Maid of Honor Bouquet',desc:'Complementary to bridal, blush tones',price:75},
-      {item:'Bridesmaid Bouquet (×4)',desc:'Matching blush and ivory',price:240}
-    ],subtotal:315},
-    {name:'Boutonnieres',expanded:false,items:[
-      {item:'Groom',desc:'White rose with eucalyptus sprig',price:15,forWhom:'Tyler'},
-      {item:'Best Man',desc:'Matching, with navy ribbon',price:15,forWhom:'Jake'},
-      {item:'Groomsmen (×4)',desc:'Simple white rose',price:48,forWhom:'Groomsmen'}
-    ],subtotal:78},
-    {name:'Corsages',expanded:false,items:[
-      {item:'Mother of the Bride',desc:'Wrist corsage, blush spray roses',price:35},
-      {item:'Mother of the Groom',desc:'Wrist corsage, ivory spray roses',price:35},
-      {item:'Grandmother (×2)',desc:'Pin-on corsage, simple rose',price:50}
-    ],subtotal:120},
-    {name:'Ceremony',expanded:false,items:[
-      {item:'Altar Arrangements (×2)',desc:'Large urn arrangements, garden style',price:350},
-      {item:'Pew Markers (×8)',desc:'Simple greenery and ribbon',price:120},
-      {item:'Arch/Backdrop Florals',desc:'Full arch with roses, hydrangea, greenery',price:450}
-    ],subtotal:920},
-    {name:'Reception',expanded:false,items:[
-      {item:'Centerpieces (×12)',desc:'Mixed height, garden style',price:720},
-      {item:'Head Table Garland',desc:'Full greenery garland with floral accents, 8ft',price:285},
-      {item:'Cake Flowers',desc:'Fresh flowers for 3-tier cake',price:65},
-      {item:'Cocktail Hour Arrangements (×3)',desc:'Bud vases, varied heights',price:72}
-    ],subtotal:1142}
+    {name:'Bridal Flowers',expanded:true,items:[{item:'Bridal Bouquet',desc:'Garden-style with white roses, eucalyptus, and peonies',price:285},{item:'Headpiece',desc:'Floral crown with baby\'s breath and greenery',price:65},{item:'Toss Bouquet',desc:'Miniature version of bridal bouquet',price:45}],subtotal:395},
+    {name:'Bridal Party',expanded:false,items:[{item:'Maid of Honor Bouquet',desc:'Complementary to bridal, blush tones',price:75},{item:'Bridesmaid Bouquet (x4)',desc:'Matching blush and ivory',price:240}],subtotal:315},
+    {name:'Boutonnieres',expanded:false,items:[{item:'Groom',desc:'White rose with eucalyptus sprig',price:15,forWhom:'Tyler'},{item:'Best Man',desc:'Matching, with navy ribbon',price:15,forWhom:'Jake'},{item:'Groomsmen (x4)',desc:'Simple white rose',price:48,forWhom:'Groomsmen'}],subtotal:78},
+    {name:'Corsages',expanded:false,items:[{item:'Mother of the Bride',desc:'Wrist corsage, blush spray roses',price:35},{item:'Mother of the Groom',desc:'Wrist corsage, ivory spray roses',price:35},{item:'Grandmother (x2)',desc:'Pin-on corsage, simple rose',price:50}],subtotal:120},
+    {name:'Ceremony',expanded:false,items:[{item:'Altar Arrangements (x2)',desc:'Large urn arrangements, garden style',price:350},{item:'Pew Markers (x8)',desc:'Simple greenery and ribbon',price:120},{item:'Arch/Backdrop Florals',desc:'Full arch with roses, hydrangea, greenery',price:450}],subtotal:920},
+    {name:'Reception',expanded:false,items:[{item:'Centerpieces (x12)',desc:'Mixed height, garden style',price:720},{item:'Head Table Garland',desc:'Full greenery garland with floral accents, 8ft',price:285},{item:'Cake Flowers',desc:'Fresh flowers for 3-tier cake',price:65},{item:'Cocktail Hour Arrangements (x3)',desc:'Bud vases, varied heights',price:72}],subtotal:1142}
   ];
 
-  const floralSubtotal = categories.reduce((s,c)=>s+c.subtotal,0);
+  const floralSubtotal = categories.reduce(function(s,c){return s+c.subtotal;},0);
+  const idx = state.selectedProposalIdx;
 
-  let html = `
-    <a class="back-link" onclick="switchView('proposals')">← Back to Proposals</a>
-    ${!isNew ? `<div class="card" style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="badge ${p.status==='Confirmed'?'badge-green':p.status==='Sent'?'badge-blue':'badge-gray'}">${p.status}</span>
-        <span class="text-muted">${p.status==='Confirmed'?'Confirmed — March 15, 2026':p.status==='Sent'?'Sent — March 10, 2026':'Draft'}</span>
-      </div>
-      <div style="display:flex;gap:8px">
-        ${p.status==='Draft'?'<button class="btn-primary btn-sm" onclick="showToast(\'Estimate sent to '+p.email+'\')">Send Estimate</button>':''}
-        ${p.status==='Sent'?'<button class="btn-success btn-sm" onclick="state.proposals[state.selectedProposalIdx].status=\'Confirmed\';showToast(\'Proposal marked as Confirmed. Deposit received.\');renderProposalEditor()">Mark Confirmed</button>':''}
-        ${p.status==='Confirmed'?'<button class="btn-primary btn-sm" onclick="state.proposals[state.selectedProposalIdx].status=\'Complete\';showToast(\'Proposal marked as Complete\');renderProposalEditor()">Mark Complete</button>':''}
-        ${p.status==='Complete'?'<button class="btn-secondary btn-sm" onclick="state.proposals[state.selectedProposalIdx].status=\'Archived\';showToast(\'Proposal archived\');renderProposalEditor()">Archive</button>':''}
-      </div>
-    </div>` : ''}
+  var statusBar = '';
+  if (!isNew) {
+    var actionBtns = '';
+    if (p.status==='Draft') actionBtns = '<button class="btn-primary btn-sm" onclick="state.proposals['+idx+'].status=\'Sent\';showToast(\'Estimate sent to '+p.email+'\');renderProposalEditor()">Send Estimate</button>';
+    else if (p.status==='Sent') actionBtns = '<button class="btn-success btn-sm" onclick="state.proposals['+idx+'].status=\'Confirmed\';showToast(\'Proposal marked as Confirmed. Deposit received.\');renderProposalEditor()">Mark Confirmed</button>';
+    else if (p.status==='Confirmed') actionBtns = '<button class="btn-primary btn-sm" onclick="state.proposals['+idx+'].status=\'Complete\';showToast(\'Proposal marked as Complete\');renderProposalEditor()">Mark Complete</button>';
+    else if (p.status==='Complete') actionBtns = '<button class="btn-secondary btn-sm" onclick="state.proposals['+idx+'].status=\'Archived\';showToast(\'Proposal archived\');renderProposalEditor()">Archive</button>';
+    statusBar = '<div class="card" style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">\
+      <div style="display:flex;align-items:center;gap:10px"><span class="badge ' + (p.status==='Confirmed'||p.status==='Complete'?'badge-green':p.status==='Sent'?'badge-blue':'badge-gray') + '">' + p.status + '</span></div>\
+      <div style="display:flex;gap:8px">' + actionBtns + '</div></div>';
+  }
 
-    <div class="card">
-      <div class="card-header"><div class="card-title">Client Information</div></div>
-      <div class="form-row">
-        <div class="form-group" style="flex:2"><label class="form-label">Client Name</label><input class="form-input" value="${p.client}"></div>
-        <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="${p.email}"><div class="form-hint">Estimate will be sent to this email</div></div>
-        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" value="(260) 555-0199"></div>
-      </div>
-    </div>
+  var html = '\
+    <a class="back-link" onclick="switchView(\'proposals\')">&#8592; Back to Proposals</a>' + statusBar + '\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Client Information</div></div>\
+      <div class="form-row">\
+        <div class="form-group" style="flex:2"><label class="form-label">Client Name</label><input class="form-input" value="' + p.client + '"></div>\
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="' + p.email + '"><div class="form-hint">Estimate will be sent to this email</div></div>\
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" value="(260) 555-0199"></div>\
+      </div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Event Details</div></div>\
+      <div class="form-row">\
+        <div class="form-group"><label class="form-label">Event Type</label><select class="form-select"><option ' + (p.eventType==='Wedding'?'selected':'') + '>Wedding</option><option>Corporate Event</option><option>Celebration</option><option>Memorial</option><option>Other</option></select></div>\
+        <div class="form-group"><label class="form-label">Event Date</label><input type="date" class="form-input" value="' + (p.eventDate?'2026-04-26':'') + '"></div>\
+        <div class="form-group"><label class="form-label">Event Time</label><input type="time" class="form-input" value="15:00"></div>\
+      </div>\
+      <div class="form-group"><label class="form-label">Venue / Location</label><input class="form-input" value="' + p.venue + '"></div>\
+      <div class="form-group"><label class="form-label">Special Instructions</label><textarea class="form-textarea" placeholder="Setup access details, timing notes, teardown requirements..."></textarea></div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Floral Categories</div></div>' +
+      categories.map(function(cat, ci){
+        return '<div class="category-section">\
+          <div class="category-header" onclick="toggleCategory(' + ci + ')">\
+            <div class="category-header-left"><span class="chevron ' + (cat.expanded?'open':'') + '">&#9654;</span> ' + cat.name + '</div>\
+            <div class="category-subtotal">' + fmt(cat.subtotal) + '</div>\
+          </div>\
+          <div class="category-body ' + (cat.expanded?'':'collapsed') + '" id="cat-body-' + ci + '">\
+            <table class="data-grid" style="margin-bottom:8px">\
+              <thead><tr><th>Item</th><th>Description</th>' + (cat.name==='Boutonnieres'?'<th>For</th>':'') + '<th class="num">Price</th></tr></thead>\
+              <tbody>' + cat.items.map(function(item){return '<tr><td style="font-weight:500">' + item.item + '</td><td class="text-muted">' + item.desc + '</td>' + (cat.name==='Boutonnieres'?'<td>' + (item.forWhom||'') + '</td>':'') + '<td class="num">' + fmt(item.price) + '</td></tr>';}).join('') + '</tbody>\
+            </table>\
+            <a style="font-size:12px" onclick="showToast(\'Add item form would open\',\'info\')">+ Add Item</a>\
+          </div>\
+        </div>';
+      }).join('') +
+    '</div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Additional Charges</div></div>\
+      <div class="form-row">\
+        <div class="form-group"><label class="form-label">Labor</label><input class="form-input" value="250.00" style="text-align:right"></div>\
+        <div class="form-group"><label class="form-label">Delivery</label><input class="form-input" value="125.00" style="text-align:right"></div>\
+        <div class="form-group"><label class="form-label">Setup &amp; Breakdown</label><input class="form-input" value="105.00" style="text-align:right"></div>\
+      </div>\
+    </div>\
+    <div class="card">\
+      <div class="card-header"><div class="card-title">Inspiration Photos</div></div>\
+      <div class="upload-zone">Drag and drop photos here, or click to browse</div>\
+      <div class="thumb-grid"><div class="thumb">ceremony-inspo.jpg</div><div class="thumb">bouquet-ref.jpg</div><div class="thumb">centerpiece-mood.jpg</div></div>\
+    </div>\
+    <div class="card" style="background:#fafafa">\
+      <div class="card-header mb-0"><div class="card-title">Proposal Summary</div></div>\
+      <div style="margin-top:12px">' +
+        categories.map(function(c){return '<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>' + c.name + '</span><span>' + fmt(c.subtotal) + '</span></div>';}).join('') +
+        '<hr class="divider">\
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Floral Subtotal</span><span>' + fmt(floralSubtotal) + '</span></div>\
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Labor</span><span>$250.00</span></div>\
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Delivery</span><span>$125.00</span></div>\
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Setup &amp; Breakdown</span><span>$105.00</span></div>\
+        <hr class="divider">\
+        <div style="display:flex;justify-content:space-between;font-size:18px;font-weight:700;padding:6px 0"><span>PROPOSAL TOTAL</span><span>' + fmt(floralSubtotal + 480) + '</span></div>\
+      </div>\
+    </div>\
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">\
+      <button class="btn-secondary" onclick="showToast(\'Draft saved\')">Save Draft</button>\
+      <button class="btn-primary" onclick="showToast(\'Estimate sent to ' + (p.email||'client@email.com') + '\')">Send Estimate</button>\
+    </div>';
 
-    <div class="card">
-      <div class="card-header"><div class="card-title">Event Details</div></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Event Type</label>
-          <select class="form-select"><option ${p.eventType==='Wedding'?'selected':''}>Wedding</option><option>Corporate Event</option><option>Celebration</option><option>Memorial</option><option>Other</option></select>
-        </div>
-        <div class="form-group"><label class="form-label">Event Date</label><input type="date" class="form-input" value="${p.eventDate?'2026-04-26':''}"></div>
-        <div class="form-group"><label class="form-label">Event Time</label><input type="time" class="form-input" value="15:00"></div>
-      </div>
-      <div class="form-group"><label class="form-label">Venue / Location</label><input class="form-input" value="${p.venue}"></div>
-      <div class="form-group"><label class="form-label">Special Instructions</label><textarea class="form-textarea" placeholder="Setup access details, timing notes, teardown requirements..."></textarea></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-title">Floral Categories</div></div>
-      ${categories.map((cat, ci) => `
-        <div class="category-section">
-          <div class="category-header" onclick="toggleCategory(${ci})">
-            <div class="category-header-left">
-              <span class="chevron ${cat.expanded?'open':''}">▶</span>
-              ${cat.name}
-            </div>
-            <div class="category-subtotal">${fmt(cat.subtotal)}</div>
-          </div>
-          <div class="category-body ${cat.expanded?'':'collapsed'}" id="cat-body-${ci}">
-            <table class="data-grid" style="margin-bottom:8px">
-              <thead><tr><th>Item</th><th>Description</th>${cat.name==='Boutonnieres'?'<th>For</th>':''}<th class="num">Price</th></tr></thead>
-              <tbody>
-                ${cat.items.map(item => `<tr>
-                  <td style="font-weight:500">${item.item}</td>
-                  <td class="text-muted">${item.desc}</td>
-                  ${cat.name==='Boutonnieres'?`<td>${item.forWhom||''}</td>`:''}
-                  <td class="num">${fmt(item.price)}</td>
-                </tr>`).join('')}
-              </tbody>
-            </table>
-            <a style="font-size:12px" onclick="showToast('Add item form would open','info')">+ Add Item</a>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-title">Additional Charges</div></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Labor</label><input class="form-input" value="250.00" style="text-align:right"></div>
-        <div class="form-group"><label class="form-label">Delivery</label><input class="form-input" value="125.00" style="text-align:right"></div>
-        <div class="form-group"><label class="form-label">Setup & Breakdown</label><input class="form-input" value="105.00" style="text-align:right"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-title">Inspiration Photos</div></div>
-      <div class="upload-zone">📷 Drag and drop photos here, or click to browse</div>
-      <div class="thumb-grid">
-        <div class="thumb">ceremony-inspo.jpg</div>
-        <div class="thumb">bouquet-ref.jpg</div>
-        <div class="thumb">centerpiece-mood.jpg</div>
-      </div>
-    </div>
-
-    <div class="card" style="background:#fafafa">
-      <div class="card-header mb-0"><div class="card-title">Proposal Summary</div></div>
-      <div style="margin-top:12px">
-        ${categories.map(c => `<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>${c.name}</span><span>${fmt(c.subtotal)}</span></div>`).join('')}
-        <hr class="divider">
-        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Floral Subtotal</span><span>${fmt(floralSubtotal)}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Labor</span><span>$250.00</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Delivery</span><span>$125.00</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Setup & Breakdown</span><span>$105.00</span></div>
-        <hr class="divider">
-        <div style="display:flex;justify-content:space-between;font-size:18px;font-weight:700;padding:6px 0"><span>PROPOSAL TOTAL</span><span>${fmt(floralSubtotal + 480)}</span></div>
-      </div>
-    </div>
-
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-      <button class="btn-secondary" onclick="showToast('Draft saved')">Save Draft</button>
-      <button class="btn-primary" onclick="showToast('Estimate sent to ${p.email||'client@email.com'}')">Send Estimate</button>
-      <button class="btn-success" onclick="showToast('Proposal marked as Confirmed. Deposit received.')">Mark Confirmed</button>
-    </div>
-  `;
   $('#view-proposal-editor').innerHTML = html;
 }
 
-// Track which categories are expanded
 const categoryExpanded = [true, false, false, false, false, false];
 function toggleCategory(i) {
   categoryExpanded[i] = !categoryExpanded[i];
-  const body = $(`#cat-body-${i}`);
-  const header = body?.previousElementSibling;
+  const body = $('#cat-body-' + i);
+  const header = body ? body.previousElementSibling : null;
   if (body) body.classList.toggle('collapsed');
   if (header) {
     const chevron = header.querySelector('.chevron');
@@ -1416,30 +1603,31 @@ function toggleCategory(i) {
    B5: HOUSE ACCOUNTS
    ═══════════════════════════════════════════════════════════════ */
 function renderHouseAccounts() {
-  const statusMap = {billed:{label:'✓ Billed',cls:'badge-green'},outstanding:{label:'⚠ Outstanding',cls:'badge-yellow'},current:{label:'— Current',cls:'badge-gray'}};
+  const statusMap = {billed:{label:'Billed',cls:'badge-green'},outstanding:{label:'Outstanding',cls:'badge-yellow'},current:{label:'Current',cls:'badge-gray'}};
 
-  let html = `
-    <div class="page-header">
-      <div><div class="page-title">House Accounts</div><div class="page-subtitle">Monthly billing for recurring business customers</div></div>
-      <button class="btn-primary" onclick="showToast('Account creation form would open','info')">+ Add Account</button>
-    </div>
-    <div class="card">
-      <table class="data-grid">
-        <thead><tr><th>Business Name</th><th>Contact</th><th class="num">Current Balance</th><th>Last Billed</th><th>Status</th><th class="actions">Actions</th></tr></thead>
-        <tbody>
-          ${state.accounts.map((a, i) => `<tr>
-            <td style="font-weight:600">${a.name}</td>
-            <td>${a.contact}</td>
-            <td class="num">${fmt(a.balance)}</td>
-            <td>${a.lastBilled || '—'}</td>
-            <td><span class="badge ${statusMap[a.status].cls}">${statusMap[a.status].label}</span></td>
-            <td class="actions"><a onclick="state.expandedAccount=${i};renderHouseAccounts()">View</a></td>
-          </tr>
-          ${state.expandedAccount===i ? `<tr><td colspan="6" style="padding:0;border:none"><div style="padding:16px 24px;background:#fafafa;border-top:1px solid #e3e3e3">${renderAccountDetail(a,i)}</div></td></tr>` : ''}
-          `).join('')}
-        </tbody>
-      </table>
-    </div>`;
+  var html = '\
+    <div class="page-header">\
+      <div><div class="page-title">House Accounts</div><div class="page-subtitle">Monthly billing for recurring business customers</div></div>\
+      <button class="btn-primary" onclick="showToast(\'Account creation form would open\',\'info\')">+ Add Account</button>\
+    </div>\
+    <div class="card">\
+      <table class="data-grid">\
+        <thead><tr><th>Business Name</th><th>Contact</th><th class="num">Current Balance</th><th>Last Billed</th><th>Status</th><th class="actions">Actions</th></tr></thead>\
+        <tbody>' +
+          state.accounts.map(function(a, i){
+            return '<tr>\
+              <td style="font-weight:600">' + a.name + '</td>\
+              <td>' + a.contact + '</td>\
+              <td class="num">' + fmt(a.balance) + '</td>\
+              <td>' + (a.lastBilled || '&mdash;') + '</td>\
+              <td><span class="badge ' + statusMap[a.status].cls + '">' + statusMap[a.status].label + '</span></td>\
+              <td class="actions"><a onclick="state.expandedAccount=' + i + ';renderHouseAccounts()">View</a></td>\
+            </tr>' +
+            (state.expandedAccount===i ? '<tr><td colspan="6" style="padding:0;border:none"><div style="padding:16px 24px;background:#fafafa;border-top:1px solid #e3e3e3">' + renderAccountDetail(a,i) + '</div></td></tr>' : '');
+          }).join('') +
+        '</tbody>\
+      </table>\
+    </div>';
   $('#view-house-accounts').innerHTML = html;
 }
 
@@ -1447,50 +1635,47 @@ function renderAccountDetail(a, i) {
   const isBilled = a.status === 'billed';
   const isOutstanding = a.status === 'outstanding';
 
-  let banner = '';
-  if (isOutstanding) banner = `<div class="banner-warning mb-16">⚠ This account has NOT been billed for the current period. Outstanding balance: ${fmt(a.balance)}</div>`;
-  else if (isBilled) banner = `<div class="banner-success mb-16">✓ This account was billed on ${a.lastBilled} for ${fmt(a.balance)}</div>`;
+  var banner = '';
+  if (isOutstanding) banner = '<div class="banner-warning mb-16">This account has not been billed for the current period. Outstanding balance: ' + fmt(a.balance) + '</div>';
+  else if (isBilled) banner = '<div class="banner-success mb-16">This account was billed on ' + a.lastBilled + ' for ' + fmt(a.balance) + '</div>';
 
-  // Sample orders
-  const sampleOrders = a.name === 'Manchester University' ? `
-    <table class="data-grid" style="margin:12px 0">
-      <thead><tr><th>Date</th><th>Order #</th><th>Recipient/Event</th><th>Products</th><th class="num">Amount</th></tr></thead>
-      <tbody>
-        <tr><td>Mar 5</td><td>#987</td><td>Spring Gala</td><td>Centerpieces (8)</td><td class="num">$280.00</td></tr>
-        <tr><td>Mar 12</td><td>#1003</td><td>President's Office</td><td>Thank You Bouquets (3)</td><td class="num">$135.00</td></tr>
-        <tr><td>Mar 22</td><td>#1031</td><td>Graduation Setup</td><td>Stage Arrangements (2)</td><td class="num">$100.00</td></tr>
-      </tbody>
-    </table>
-    <div style="text-align:right;font-weight:600;font-size:13px">Period Total: ${fmt(a.balance)}</div>
-  ` : `<div class="text-muted" style="padding:12px 0">No orders this period.</div>`;
+  var sampleOrders = a.name === 'Manchester University' ? '\
+    <table class="data-grid" style="margin:12px 0">\
+      <thead><tr><th>Date</th><th>Order #</th><th>Recipient/Event</th><th>Products</th><th class="num">Amount</th></tr></thead>\
+      <tbody>\
+        <tr><td>Mar 5</td><td>#987</td><td>Spring Gala</td><td>Centerpieces (8)</td><td class="num">$280.00</td></tr>\
+        <tr><td>Mar 12</td><td>#1003</td><td>President\'s Office</td><td>Thank You Bouquets (3)</td><td class="num">$135.00</td></tr>\
+        <tr><td>Mar 22</td><td>#1031</td><td>Graduation Setup</td><td>Stage Arrangements (2)</td><td class="num">$100.00</td></tr>\
+      </tbody>\
+    </table>\
+    <div style="text-align:right;font-weight:600;font-size:13px">Period Total: ' + fmt(a.balance) + '</div>'
+  : '<div class="text-muted" style="padding:12px 0">No orders this period.</div>';
 
-  return `
-    ${banner}
-    <div style="display:flex;gap:24px;margin-bottom:12px">
-      <div><span class="text-muted">Phone:</span> (260) 982-5000</div>
-      <div><span class="text-muted">Email:</span> events@${a.name.toLowerCase().replace(/ /g,'')}.edu</div>
-    </div>
-    <div style="font-weight:600;margin:12px 0 4px">Orders This Period (March 2026)</div>
-    ${sampleOrders}
-    <div style="margin-top:12px">
-      <button class="btn-primary btn-sm" ${isBilled?'disabled':''} onclick="markAsBilled(${i})">${isBilled?'Already Billed This Period':'Mark as Billed'}</button>
-    </div>
-    <div style="font-weight:600;margin:16px 0 8px">Billing History</div>
-    <table class="data-grid">
-      <thead><tr><th>Period</th><th class="num">Total</th><th>Billed Date</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>February 2026</td><td class="num">$340.00</td><td>Feb 28, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
-        <tr><td>January 2026</td><td class="num">$195.00</td><td>Jan 30, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
-        <tr><td>December 2025</td><td class="num">$780.00</td><td>Jan 2, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
-      </tbody>
-    </table>
-  `;
+  return banner + '\
+    <div style="display:flex;gap:24px;margin-bottom:12px">\
+      <div><span class="text-muted">Phone:</span> (260) 982-5000</div>\
+      <div><span class="text-muted">Email:</span> events@' + a.name.toLowerCase().replace(/ /g,'') + '.edu</div>\
+    </div>\
+    <div style="font-weight:600;margin:12px 0 4px">Orders This Period (March 2026)</div>' +
+    sampleOrders + '\
+    <div style="margin-top:12px">\
+      <button class="btn-primary btn-sm" ' + (isBilled?'disabled':'') + ' onclick="markAsBilled(' + i + ')">' + (isBilled?'Already Billed This Period':'Mark as Billed') + '</button>\
+    </div>\
+    <div style="font-weight:600;margin:16px 0 8px">Billing History</div>\
+    <table class="data-grid">\
+      <thead><tr><th>Period</th><th class="num">Total</th><th>Billed Date</th><th>Status</th></tr></thead>\
+      <tbody>\
+        <tr><td>February 2026</td><td class="num">$340.00</td><td>Feb 28, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>\
+        <tr><td>January 2026</td><td class="num">$195.00</td><td>Jan 30, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>\
+        <tr><td>December 2025</td><td class="num">$780.00</td><td>Jan 2, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>\
+      </tbody>\
+    </table>';
 }
 
 function markAsBilled(i) {
   state.accounts[i].status = 'billed';
   state.accounts[i].lastBilled = 'Apr 3, 2026';
-  showToast(`${state.accounts[i].name} marked as billed for March 2026`);
+  showToast(state.accounts[i].name + ' marked as billed for March 2026');
   renderHouseAccounts();
 }
 
@@ -1499,63 +1684,60 @@ function markAsBilled(i) {
    ═══════════════════════════════════════════════════════════════ */
 function renderCalendar() {
   const deliveryCounts = {3:12,4:5,7:3,8:6,9:4,10:7,11:2,14:8,15:3,16:5,17:4,21:6,22:9,23:3,24:7,25:4,27:5,28:8,29:3,30:6};
-  // April 2026: starts on Wednesday (index 3), 30 days
-  const startDow = 3; // Wednesday
+  const startDow = 3;
   const daysInMonth = 30;
   const today = 3;
 
-  let html = `
-    <div class="page-header">
-      <div><div class="page-title">Delivery Calendar</div><div class="page-subtitle">Manage delivery availability and view scheduled deliveries</div></div>
-    </div>
-    <div class="tab-toggle mb-16">
-      <button class="tab-toggle-btn ${state.calendarStore==='North Manchester'?'active':''}" onclick="state.calendarStore='North Manchester';showToast('Showing North Manchester calendar');renderCalendar()">North Manchester</button>
-      <button class="tab-toggle-btn ${state.calendarStore==='Fort Wayne'?'active':''}" onclick="state.calendarStore='Fort Wayne';showToast('Showing Fort Wayne calendar');renderCalendar()">Fort Wayne</button>
-    </div>
-    <div class="card">
-      <div style="text-align:center;font-size:17px;font-weight:700;margin-bottom:16px">April 2026</div>
-      <div class="calendar-grid">
-        <div class="cal-header">Sun</div><div class="cal-header">Mon</div><div class="cal-header">Tue</div><div class="cal-header">Wed</div><div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div>`;
+  var html = '\
+    <div class="page-header">\
+      <div><div class="page-title">Delivery Calendar</div><div class="page-subtitle">Manage delivery availability and view scheduled deliveries</div></div>\
+    </div>\
+    <div class="tab-toggle mb-16">\
+      <button class="tab-toggle-btn ' + (state.calendarStore==='North Manchester'?'active':'') + '" onclick="state.calendarStore=\'North Manchester\';showToast(\'Showing North Manchester calendar\');renderCalendar()">North Manchester</button>\
+      <button class="tab-toggle-btn ' + (state.calendarStore==='Fort Wayne'?'active':'') + '" onclick="state.calendarStore=\'Fort Wayne\';showToast(\'Showing Fort Wayne calendar\');renderCalendar()">Fort Wayne</button>\
+    </div>\
+    <div class="card">\
+      <div style="text-align:center;font-size:17px;font-weight:700;margin-bottom:16px">April 2026</div>\
+      <div class="calendar-grid">\
+        <div class="cal-header">Sun</div><div class="cal-header">Mon</div><div class="cal-header">Tue</div><div class="cal-header">Wed</div><div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div>';
 
-  // Empty cells before first day
-  for (let i = 0; i < startDow; i++) html += '<div class="cal-cell empty"></div>';
+  for (var i = 0; i < startDow; i++) html += '<div class="cal-cell empty"></div>';
 
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dow = (startDow + day - 1) % 7;
-    const isBlocked = state.calendarBlocked[day];
-    const isPast = day < today;
-    const isToday = day === today;
-    const isSunday = dow === 0;
-    const deliveries = deliveryCounts[day] || 0;
+  for (var day = 1; day <= daysInMonth; day++) {
+    var dow = (startDow + day - 1) % 7;
+    var isBlocked = state.calendarBlocked[day];
+    var isPast = day < today;
+    var isToday = day === today;
+    var isSunday = dow === 0;
+    var deliveries = deliveryCounts[day] || 0;
 
-    let classes = 'cal-cell';
+    var classes = 'cal-cell';
     if (isToday) classes += ' today';
     if (isPast) classes += ' past';
     if (isBlocked || isSunday) classes += ' blocked';
 
-    const clickAction = isPast || (isSunday) ? '' : `onclick="toggleBlock(${day})"`;
+    var clickAction = isPast || isSunday ? '' : 'onclick="toggleBlock(' + day + ')"';
 
-    html += `<div class="${classes}" ${clickAction}>
-      <div class="cal-day">${day}</div>
-      ${(isBlocked || isSunday) ? '<div class="cal-blocked-label">BLOCKED</div>' : ''}
-      ${deliveries && !(isBlocked || isSunday) ? `<div class="cal-info">${deliveries} deliveries</div>` : ''}
-    </div>`;
+    html += '<div class="' + classes + '" ' + clickAction + '>\
+      <div class="cal-day">' + day + '</div>' +
+      ((isBlocked || isSunday) ? '<div class="cal-blocked-label">BLOCKED</div>' : '') +
+      (deliveries && !(isBlocked || isSunday) ? '<div class="cal-info">' + deliveries + ' deliveries</div>' : '') +
+    '</div>';
   }
 
-  html += `</div></div>
-    <div class="banner-info mt-16">☀ Same-day delivery cutoff: 12:00 PM. Current time: 10:30 AM — Same-day delivery is <strong>AVAILABLE</strong> today.</div>
-    <div class="text-muted mt-8" style="font-size:12px">Blocked dates are automatically hidden from customers during checkout. Changes take effect immediately.</div>
-  `;
+  html += '</div></div>\
+    <div class="banner-info mt-16">Same-day delivery cutoff: 12:00 PM. Current time: 10:30 AM &mdash; Same-day delivery is <strong>AVAILABLE</strong> today.</div>\
+    <div class="text-muted mt-8" style="font-size:12px">Blocked dates are automatically hidden from customers during checkout. Changes take effect immediately.</div>';
   $('#view-calendar').innerHTML = html;
 }
 
 function toggleBlock(day) {
   if (state.calendarBlocked[day]) {
     delete state.calendarBlocked[day];
-    showToast(`April ${day} unblocked for ${state.calendarStore}.`);
+    showToast('April ' + day + ' unblocked for ' + state.calendarStore + '.');
   } else {
     state.calendarBlocked[day] = true;
-    showToast(`April ${day} blocked for ${state.calendarStore}. Customers will not be able to select this date.`);
+    showToast('April ' + day + ' blocked for ' + state.calendarStore + '. Customers will not be able to select this date.');
   }
   renderCalendar();
 }
@@ -1566,46 +1748,47 @@ function toggleBlock(day) {
 function renderSubscriptions() {
   const statusMap = {Active:'badge-green',Paused:'badge-yellow'};
 
-  let html = `
-    <div class="page-header">
-      <div><div class="page-title">Subscriptions & Standing Orders</div><div class="page-subtitle">Manage recurring flower deliveries for your regular customers</div></div>
-      <button class="btn-primary" onclick="showToast('Subscription creation form coming soon','info')">+ New Subscription</button>
-    </div>
-    <div class="banner-info mb-16">ℹ This module is in detailed scoping. Shown here as a preview of planned functionality.</div>
-    <div class="card">
-      <table class="data-grid">
-        <thead><tr><th>Customer</th><th>Product</th><th>Frequency</th><th>Next Delivery</th><th>Store</th><th>Status</th><th class="actions">Actions</th></tr></thead>
-        <tbody>
-          ${state.subscriptions.map((s, i) => `<tr>
-            <td style="font-weight:600">${s.customer}</td>
-            <td>${s.product}</td>
-            <td>${s.freq}</td>
-            <td>${s.next}</td>
-            <td>${s.store}</td>
-            <td><span class="badge ${statusMap[s.status]}">${s.status}</span></td>
-            <td class="actions"><a onclick="state.expandedSub=${state.expandedSub===i?null:i};renderSubscriptions()">Manage</a></td>
-          </tr>
-          ${state.expandedSub===i ? `<tr><td colspan="7" style="padding:0;border:none"><div style="padding:16px 24px;background:#fafafa;border-top:1px solid #e3e3e3">
-            <div class="detail-grid" style="max-width:500px">
-              <div class="detail-label">Customer</div><div class="detail-value">${s.customer}${s.contact?' ('+s.contact+')':''}</div>
-              <div class="detail-label">Product</div><div class="detail-value">${s.product} — ${s.desc}</div>
-              <div class="detail-label">Frequency</div><div class="detail-value">${s.schedule}</div>
-              <div class="detail-label">Delivery Address</div><div class="detail-value">${s.address}</div>
-              <div class="detail-label">Next Delivery</div><div class="detail-value">${s.next}</div>
-              <div class="detail-label">Started</div><div class="detail-value">${s.started}</div>
-              <div class="detail-label">Total Deliveries</div><div class="detail-value">${s.totalDeliveries}</div>
-              <div class="detail-label">Status</div><div class="detail-value"><span class="badge ${statusMap[s.status]}">${s.status}</span></div>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:16px">
-              <button class="btn-${s.status==='Active'?'secondary':'success'} btn-sm" onclick="toggleSubStatus(${i})">${s.status==='Active'?'Pause Subscription':'Resume Subscription'}</button>
-              <button class="btn-secondary btn-sm" onclick="showToast('Edit details form would open','info')">Edit Details</button>
-              <button class="btn-danger btn-sm" onclick="showToast('Subscription cancellation would require confirmation','info')">Cancel Subscription</button>
-            </div>
-          </div></td></tr>` : ''}
-          `).join('')}
-        </tbody>
-      </table>
-    </div>`;
+  var html = '\
+    <div class="page-header">\
+      <div><div class="page-title">Subscriptions &amp; Standing Orders</div><div class="page-subtitle">Manage recurring flower deliveries for your regular customers</div></div>\
+      <button class="btn-primary" onclick="showToast(\'Subscription creation form coming soon\',\'info\')">+ New Subscription</button>\
+    </div>\
+    <div class="banner-info mb-16">This module is in detailed scoping. Shown here as a preview of planned functionality.</div>\
+    <div class="card">\
+      <table class="data-grid">\
+        <thead><tr><th>Customer</th><th>Product</th><th>Frequency</th><th>Next Delivery</th><th>Store</th><th>Status</th><th class="actions">Actions</th></tr></thead>\
+        <tbody>' +
+          state.subscriptions.map(function(s, i){
+            return '<tr>\
+              <td style="font-weight:600">' + s.customer + '</td>\
+              <td>' + s.product + '</td>\
+              <td>' + s.freq + '</td>\
+              <td>' + s.next + '</td>\
+              <td>' + s.store + '</td>\
+              <td><span class="badge ' + statusMap[s.status] + '">' + s.status + '</span></td>\
+              <td class="actions"><a onclick="state.expandedSub=' + (state.expandedSub===i?'null':i) + ';renderSubscriptions()">Manage</a></td>\
+            </tr>' +
+            (state.expandedSub===i ? '<tr><td colspan="7" style="padding:0;border:none"><div style="padding:16px 24px;background:#fafafa;border-top:1px solid #e3e3e3">\
+              <div class="detail-grid" style="max-width:500px">\
+                <div class="detail-label">Customer</div><div class="detail-value">' + s.customer + (s.contact?' ('+s.contact+')':'') + '</div>\
+                <div class="detail-label">Product</div><div class="detail-value">' + s.product + ' &mdash; ' + s.desc + '</div>\
+                <div class="detail-label">Frequency</div><div class="detail-value">' + s.schedule + '</div>\
+                <div class="detail-label">Delivery Address</div><div class="detail-value">' + s.address + '</div>\
+                <div class="detail-label">Next Delivery</div><div class="detail-value">' + s.next + '</div>\
+                <div class="detail-label">Started</div><div class="detail-value">' + s.started + '</div>\
+                <div class="detail-label">Total Deliveries</div><div class="detail-value">' + s.totalDeliveries + '</div>\
+                <div class="detail-label">Status</div><div class="detail-value"><span class="badge ' + statusMap[s.status] + '">' + s.status + '</span></div>\
+              </div>\
+              <div style="display:flex;gap:8px;margin-top:16px">\
+                <button class="btn-' + (s.status==='Active'?'secondary':'success') + ' btn-sm" onclick="toggleSubStatus(' + i + ')">' + (s.status==='Active'?'Pause Subscription':'Resume Subscription') + '</button>\
+                <button class="btn-secondary btn-sm" onclick="showToast(\'Edit details form would open\',\'info\')">Edit Details</button>\
+                <button class="btn-danger btn-sm" onclick="showToast(\'Subscription cancellation would require confirmation\',\'info\')">Cancel Subscription</button>\
+              </div>\
+            </div></td></tr>' : '');
+          }).join('') +
+        '</tbody>\
+      </table>\
+    </div>';
   $('#view-subscriptions').innerHTML = html;
 }
 
